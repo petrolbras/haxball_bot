@@ -110,7 +110,7 @@ let uniformes = {
         "name": 'Santos',
         "type": Uniform.CLUBSA,
         "emoji": '⚪⚪⚪',
-        "angle": -34,
+        "angle": 0,
         "textcolor": 0x000000,
         "color1": 0xFFFFFF,
         "color2": 0xFFFFFF,
@@ -287,7 +287,7 @@ let uniformes = {
         "color23": 0x66C2FF
     },
     "bah": {
-        "name": "Bahia",
+        "name": 'Bahia',
         "type": Uniform.CLUBSA,
         "emoji": '🔵⚪🔴',
         "angle": 0,
@@ -304,7 +304,7 @@ let uniformes = {
     "vit": {
         "name": 'Vitória',
         "type": Uniform.CLUBSA,
-        "emoji":'⚫🔴⚫',
+        "emoji": '⚫🔴⚫',
         "angle": 90,
         "textcolor": 0xFFFFFF,
         "color1": 0xFF1D0D,
@@ -380,7 +380,7 @@ let uniformes = {
         "color23": 0xFFFFFF
     },
     "bor": {
-        "name": "Borussia",
+        "name": 'Borussia',
         "type": Uniform.CLUBEU,
         "emoji": '⚫🟡⚫',
         "angle": 90,
