@@ -1064,6 +1064,8 @@ room.onTeamVictory = function () {
 	
 }
 
+/* Funções auxiliares */
+
 function updateAdmins() {
     let players = room.getPlayerList();
     if (players.length == 0) return;
@@ -1201,4 +1203,8 @@ function adminCommand(player, message) {
     } else if (!player.admin && msgArray.length >= 1 && msgArray[0] !== adminPassword) {
         room.sendAnnouncement(`Comando inválido ou você não tem permissão.`, player.id, announcementColor, "bold")
     }
+}
+
+function leaveCommmand(player, message){
+    room.kickPlayer(player.id, "Tchau!", false)
 }
