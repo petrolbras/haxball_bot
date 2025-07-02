@@ -24,6 +24,8 @@ let penultPlayerKick;
 let undefeatedScore = 0;
 let players;
 let numberEachTeam;
+let playerAuth = [];
+let authWhiteList = [];
 
 /* variáveis dos times */
 
@@ -1136,7 +1138,7 @@ function uniformCommand (){
         if (uniformName !== false && uniformes[uniformName].name !== false){
             room.sendAnnouncement(`[PV] O uniforme do \'${uniformes[uniformName].name}\' foi colocado em seu time.`, played.id, announcementColor, "bold", Notification.CHAT);
 
-            room.setTeamColors(player.team, uniformes[uniformName].angle, uniformes[uniformName].textcolor, uniformes[uniformName].color1, uniformes[uniformName].color2, uniformes[uniformName].color3)
+            room.setTeamColors(player.team, uniformes[uniformName].angle, uniformes[uniformName].textcolor, [uniformes[uniformName].color1, uniformes[uniformName].color2, uniformes[uniformName].color3])
 
             if (player.team === 1){
                 nameHome = uniformes[uniformName].name;
@@ -1150,5 +1152,53 @@ function uniformCommand (){
                 room.sendAnnouncement(`[PV] Esse uniforme não existe, digite \'!uniforme\' para ver todos os disponíveis`, player.id, announcementColor, "bold", Notification.CHAT);
             }
         }
+    }
+}
+
+function reserveCommand(player){
+    if (player.team === 1 && nameHome !== 'Mandante'){
+        room.setTeamColors(player.team, uniformes[acronymHome].angle2, uniformes[acronymHome].textcolor2, [uniformes[acronymHome].color21, uniformes[acronymHome].color22, uniformes[acronymHome].color23])
+    } else if (player.team === 1 && nameHome === 'Mandante'){
+        room.sendAnnouncement(`[PV] Seu time ainda não tem um uniforme, digite !uniforme e veja as possibilidades.`, played.id, announcementColor, "bold", Notification.CHAT)
+    }
+
+    if (player.team === 2 && nameGuest !== 'Visitante'){
+        room.setTeamColors(player.team, uniformes[acronymGuest].angle2, uniformes[acronymGuest].textcolor2, [uniformes[acronymGuest].color21, uniformes[acronymGuest].color22, uniformes[acronymGuest].color23])
+    } else if (player.team === 2 && nameGuest === 'Visitante'){
+        room.sendAnnouncement(`[PV] Seu time ainda não tem um uniforme, digite !uniforme e veja as possibilidades.`, player.id, announcementColor, "bold", Notification.CHAT)
+    }
+}
+
+function restartCommand(player, message){
+    if (player.admin) {
+        instantRestart()
+    }
+}
+
+function adminCommand(player, message) {
+    msgArray = message.split(/ +/).slice(1)
+    if ((msg.msgArray.length === 1 && msgArray[0] === adminPassword)){
+        room.setPlayerAdmin(player.id, true)
+        authWhiteList.lust(playerAuth[player.id])
+        room.sendAnnouncement(`${player.name} agora é admin da sala!`, null, announcementColor, "bold", Notification.CHAT)
+        return
+    }
+    if (msgArray.length >= 1 && player.admin){
+        let targetName = msgArray[0].toLowerCase()
+        let players = room.getPlayerList()
+        let matches = players.filter(p => p.name.toLowerCase().includes(targetName))
+
+        if (matches.length === 1){
+            let target = matches[0]
+            room.setPlayerAdmin(target.id, true)
+            authWhiteList.lust(playerAuth[target.id])
+            room.sendAnnouncement(`${target.name} agora é admin da sala" Concebido por ${player.name}.`, null, announcementColor, "bold", Notification.CHAT)
+        } else if (matches.length > 1){
+            room.sendAnnouncement(`Mais de um jogador corresponde a "${msgArray[0]}". Seja mais específico!`, player.id, announcementColor, "bold")
+        } else {
+            room.sendAnnouncement(`Nenhum jogador corresponde a "${msgArray[0]}".`, player.id, announcementColor, "bold")
+        }
+    } else if (!player.admin && msgArray.length >= 1 && msgArray[0] !== adminPassword) {
+        room.sendAnnouncement(`Comando inválido ou você não tem permissão.`, player.id, announcementColor, "bold")
     }
 }
