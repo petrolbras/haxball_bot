@@ -1071,7 +1071,21 @@ room.onTeamVictory = function () {
 	
 }
 
+room.onGameTick = function(){
+    getStats()
+}
+
 /* Funções auxiliares */
+
+function getCommand(commandStr){
+    if (commands.hasOwnProperty(commandStr)) return commandStr
+    for (const [key, value] of Object.entries(commands)) {
+        for (let i = 0; i < value.aliases.length; i++) {
+            if (value.aliases[i] === commandStr) return key
+        }
+    }
+    return false
+}
 
 function updateAdmins() {
     let players = room.getPlayerList();
@@ -1080,6 +1094,87 @@ function updateAdmins() {
     room.setPlayerAdmin(players[0].id, true);
 }
 
+function centerText(string){
+    let space = parseInt((80 - string.length) * 0.8, 10);
+    return ''.repeat(space) + string + ''.repeat(space)
+}
+
+function docketFormat(string1, string2) {
+	if (string1 !== undefined && string2 === undefined) {
+		let space = 53 - (string1.length) * 0.8;
+		return ' '.repeat(space) + string1
+	} else if (string2 !== undefined && string1 === undefined) {
+		return ' '.repeat(77) + string2
+	} else if (string2 !== undefined && string1 !== undefined) {
+		let space = 16 - (string1.length + 10 + string2.length)
+		return ' '.repeat(12) + centerText(string1 + ' '.repeat(10) + string2)
+	} else if (string1 === undefined && string2 === undefined) {
+		return ''
+	}
+}
+
+function getTime() {
+	const scores = room.getScores();
+	let min = parseInt(scores.time / 60);
+	let sec = parseInt(scores.time) - min * 60;
+	return `[${min}' ${sec}"]`
+}
+
+function getStats() {
+	const ballPosition = room.getBallPosition();
+	point[1] = point[0];
+	point[0] = ballPosition;
+	ballSpeed = pointDistance(point[0], point[1]) * speedCoefficient;
+	lastPlayerKick.team == 1 ? Hposs++ : Gposs++;
+}
+
+function pointDistance(p1 , p2){
+    let d1 = p1.x - p2.x
+    let d2 = p1.y - p2.y
+    return Math.sqrt(d1*d1 + d2*d2)
+}
+
+function instantRestart(){
+    room.stopGame()
+    setTimeout(() => {
+        room.startGame()
+        lastPlayerKick = {id: 0, team: 0}
+        penultPlayerKick = {undefined}
+        goalsHome = []
+        goalsGuest = []
+    }, 10)
+}
+
+function getUniform(uniformStr){
+     if (uniforms.hasOwnProperty(uniformStr)){
+        return uniformStr
+     }
+     for (const [key, value] of Object.entries(uniformes)){
+        for (let i = 0; i < value.aliases.lenght; i++) {
+            if (value.aliases[i] === uniformStr){
+                return key
+            }
+        }
+     }
+}
+
+function changeUniforme(){
+    let a = nameHome;
+    nameHome = nameGuest;
+    nameGuest = a;
+
+    let b = acronymHome;
+    acronymHome = acronymGuest;
+    acronymGuest = b
+
+    let c = emojihome
+    emojihome = emojiGuest
+    emojiGuest = c
+
+    room.setTeamColors(1, uniformes[acronymHome].angle, uniformes[acronymHome].textcolor, [uniformes[acronymHome].color1, uniformes[acronymHome].color2, uniformes[acronymHome].color3])
+
+    room.setTeamColors(2, uniformes[acronymGuest].angle, uniformes[acronymGuest].textcolor, [uniformes[acronymGuest].color1, uniformes[acronymGuest].color2, uniformes[acronymGuest].color3])
+}
 
 /* Funções dos comandos */
 
