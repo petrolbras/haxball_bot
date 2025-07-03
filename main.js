@@ -9,6 +9,8 @@ let room = HBInit ({
 
 /* variáveis Globais */
 
+let playerAuth = [];
+let authWhiteList = [];
 const Role = { PLAYER: 0, ADMIN: 1};
 const Uniform = { CLUBLA: 0, CLUBEU: 1, CLUBCS: 2 };
 let speedCoefficient = 100 / (5 * (0.99 ** 60 + 1));
@@ -23,8 +25,6 @@ let penultPlayerKick;
 let undefeatedScore = 0;
 let players;
 let numberEachTeam;
-let playerAuth = [];
-let authWhiteList = [];
 
 /* variáveis dos times */
 
@@ -32,7 +32,7 @@ let nameHome = 'Mandante';
 let acronymHome = 'Home';
 let nameGuest = 'Visitante';
 let acronymGuest = 'Away';
-let emojihome = '🏠';
+let emojiHome = '🏠';
 let emojiGuest = '✈️';
 let playersTeamHome;
 let playersTeamGuest;
@@ -44,7 +44,7 @@ let Gposs;
 
 /* Lista de comandos */
 
-let commands = {
+const commands = {
     "ajuda": {
         "similar": ['help'],
         "roles": Role.PLAYER,
@@ -58,9 +58,9 @@ let commands = {
         "function": leaveCommand,
     },
     "uniforme": {
-        "similar": ['uni', 'uniformes', 'uniform'],
+        "similar": ['uni', 'uniforms', 'uniform'],
         "roles": Role.PLAYER,
-        "desc": `Este comando mostra todos os uniformes disponíveis para seu time vestir.`,
+        "desc": `Este comando mostra todos os uniforms disponíveis para seu time vestir.`,
         "function": uniformCommand,
     },
     "reserva": {
@@ -95,7 +95,7 @@ let commands = {
     }
 };
 
-/* Lista de uniformes */
+/* Lista de uniforms */
 
 let uniforms = {
 
@@ -612,8 +612,6 @@ let uniforms = {
 room.setScoreLimit(0);
 room.setTimeLimit(3);
 room.setTeamsLock(true);
-room.setTeamColors(1, uniforms[acronymHome].angle, uniforms[acronymHome].textcolor, [uniforms[acronymHome].color1, uniforms[acronymHome].color2, uniforms[acronymHome].color3]);
-room.setTeamColors(2, uniforms[acronymGuest].angle, uniforms[acronymGuest].textcolor, [uniforms[acronymGuest].color1, uniforms[acronymGuest].color2, uniforms[acronymGuest].color3]);
 
 /* Funções Primárias */
 
@@ -746,19 +744,19 @@ room.onTeamVictory = function () {
 
 	} else {
 		setTimeout(function () {
-			for (var i = 0; i < playersTeamHome.length; i++) {
+			for (let i = 0; i < playersTeamHome.length; i++) {
 				room.setPlayerTeam(playersTeamHome[i].id, 0);
 			}
 		}, 6000);
 
 		setTimeout(function () {
-			for (var i = 0; i < playersTeamGuest.length; i++) {
+			for (let i = 0; i < playersTeamGuest.length; i++) {
 				room.setPlayerTeam(playersTeamGuest[i].id, 1);
 			}
 		}, 7000);
 
 		setTimeout(function () {
-			for (var i = 0; i < numberEachTeam; i++) {
+			for (let i = 0; i < numberEachTeam; i++) {
 				room.setPlayerTeam(playersTeamEspec[i].id, 2);
 			}
 		}, 8000);
@@ -865,7 +863,7 @@ function getUniform(uniformStr){
      if (uniforms.hasOwnProperty(uniformStr)){
         return uniformStr
      }
-     for (const [key, value] of Object.entries(uniformes)){
+     for (const [key, value] of Object.entries(uniforms)){
         for (let i = 0; i < value.similar.length; i++) {
             if (value.similar[i] === uniformStr){
                 return key
@@ -887,9 +885,9 @@ function changeUniforme(){
     emojihome = emojiGuest
     emojiGuest = c
 
-    room.setTeamColors(1, uniformes[acronymHome].angle, uniformes[acronymHome].textcolor, [uniformes[acronymHome].color1, uniformes[acronymHome].color2, uniformes[acronymHome].color3])
+    room.setTeamColors(1, uniforms[acronymHome].angle, uniforms[acronymHome].textcolor, [uniforms[acronymHome].color1, uniforms[acronymHome].color2, uniforms[acronymHome].color3])
 
-    room.setTeamColors(2, uniformes[acronymGuest].angle, uniformes[acronymGuest].textcolor, [uniformes[acronymGuest].color1, uniformes[acronymGuest].color2, uniformes[acronymGuest].color3])
+    room.setTeamColors(2, uniforms[acronymGuest].angle, uniforms[acronymGuest].textcolor, [uniforms[acronymGuest].color1, uniforms[acronymGuest].color2, uniforms[acronymGuest].color3])
 }
 
 /* Funções dos comandos */
@@ -898,10 +896,10 @@ function helpCommand(player, message) {
     let msgArray = message.split(/ +/).splice(1)
     if (msgArray.length === 0){
         let commandString = "[PV] LISTA DE COMANDOS DO SERVER"
-        commandString += "\nComandos de Players:"
+        commandString += "\nComandos de Players: "
         for (const [key, value] of Object.entries(commands)){
             if(value.desc && value.roles === Role.PLAYER) {
-                commandString += `!${key},`;
+                commandString += `!${key}, `;
             }
         }
         commandString = commandString.substring(0, commandString.length - 1) + "."
@@ -909,7 +907,7 @@ function helpCommand(player, message) {
             commandString += "\nComandos de Adminstradores: "
             for(const [key, value] of Object.entries(commands)){
                 if(value.desc && value.roles === Role.ADMIN){
-                    commandString += `!${key}`
+                    commandString += `!${key}, `
                 }
             }
         }
@@ -925,11 +923,11 @@ function helpCommand(player, message) {
 	}
 }
 
-function uniformCommand (){ 
+function uniformCommand (player,message){ 
     let msgArray = message.split(/ +/).splice(1)
     if (msgArray.length === 0 ){
         let uniformString = "[PV] Clubes Sulamericanos"
-        for (const [key, value] of Object.entries(uniformes)){
+        for (const [key, value] of Object.entries(uniforms)){
             if (value.type === Uniform.CLUBSA) {
                 uniformString += `\n ${value.name}: !uniforme ${key}`
             }
@@ -937,7 +935,7 @@ function uniformCommand (){
         uniformString += `\n`
         room.sendAnnouncement(uniformString, player.id, announcementColor, "bold", Notification.CHAT)
         let uniformString2 = "[PV] Clubes Europeus"
-        for (const [key, value] of Object.entries(uniformes)) {
+        for (const [key, value] of Object.entries(uniforms)) {
             if (value.type === Uniform.CLUBEU) {
                 uniformString2 += `\n ${value.name}: !uniforme ${key}`
             }
@@ -945,7 +943,7 @@ function uniformCommand (){
         uniformString2 += `\n`
         room.sendAnnouncement(uniformString2, player.id, announcementColor, "bold", Notification.CHAT)
         let uniformString3 = "[PV] Clubes Custom"
-        for (const [key, value] of Object.entries(uniformes)){
+        for (const [key, value] of Object.entries(uniforms)){
             if (value.type === Uniform.CLUBCS){
                 uniformString3 += `\n ${value.name}: !uniforme ${key}`
             }
@@ -955,19 +953,19 @@ function uniformCommand (){
     }
     else if (msgArray.length >= 1){
         let uniformName = getUniform(msgArray[0].toLowerCase())
-        if (uniformName !== false && uniformes[uniformName].name !== false){
-            room.sendAnnouncement(`[PV] O uniforme do \'${uniformes[uniformName].name}\' foi colocado em seu time.`, player.id, announcementColor, "bold", Notification.CHAT);
+        if (uniformName !== false && uniforms[uniformName].name !== false){
+            room.sendAnnouncement(`[PV] O uniforme do \'${uniforms[uniformName].name}\' foi colocado em seu time.`, player.id, announcementColor, "bold", Notification.CHAT);
 
-            room.setTeamColors(player.team, uniformes[uniformName].angle, uniformes[uniformName].textcolor, [uniformes[uniformName].color1, uniformes[uniformName].color2, uniformes[uniformName].color3])
+            room.setTeamColors(player.team, uniforms[uniformName].angle, uniforms[uniformName].textcolor, [uniforms[uniformName].color1, uniforms[uniformName].color2, uniforms[uniformName].color3])
 
             if (player.team === 1){
-                nameHome = uniformes[uniformName].name;
+                nameHome = uniforms[uniformName].name;
                 acronymHome = uniformName;
-                emojihome = uniformes[uniformName].emoji;
+                emojihome = uniforms[uniformName].emoji;
             } else if (player.team === 2){
-                nameGuest = uniformes[uniformName].name;
+                nameGuest = uniforms[uniformName].name;
                 acronymGuest = uniformName;
-                emojiGuest = uniformes[uniformName].emoji;
+                emojiGuest = uniforms[uniformName].emoji;
             } else {
                 room.sendAnnouncement(`[PV] Esse uniforme não existe, digite \'!uniforme\' para ver todos os disponíveis`, player.id, announcementColor, "bold", Notification.CHAT);
             }
@@ -977,13 +975,13 @@ function uniformCommand (){
 
 function reserveCommand(player){
     if (player.team === 1 && nameHome !== 'Mandante'){
-        room.setTeamColors(player.team, uniformes[acronymHome].angle2, uniformes[acronymHome].textcolor2, [uniformes[acronymHome].color21, uniformes[acronymHome].color22, uniformes[acronymHome].color23])
+        room.setTeamColors(player.team, uniforms[acronymHome].angle2, uniforms[acronymHome].textcolor2, [uniforms[acronymHome].color21, uniforms[acronymHome].color22, uniforms[acronymHome].color23])
     } else if (player.team === 1 && nameHome === 'Mandante'){
         room.sendAnnouncement(`[PV] Seu time ainda não tem um uniforme, digite !uniforme e veja as possibilidades.`, player.id, announcementColor, "bold", Notification.CHAT)
     }
 
     if (player.team === 2 && nameGuest !== 'Visitante'){
-        room.setTeamColors(player.team, uniformes[acronymGuest].angle2, uniformes[acronymGuest].textcolor2, [uniformes[acronymGuest].color21, uniformes[acronymGuest].color22, uniformes[acronymGuest].color23])
+        room.setTeamColors(player.team, uniforms[acronymGuest].angle2, uniforms[acronymGuest].textcolor2, [uniforms[acronymGuest].color21, uniforms[acronymGuest].color22, uniforms[acronymGuest].color23])
     } else if (player.team === 2 && nameGuest === 'Visitante'){
         room.sendAnnouncement(`[PV] Seu time ainda não tem um uniforme, digite !uniforme e veja as possibilidades.`, player.id, announcementColor, "bold", Notification.CHAT)
     }
