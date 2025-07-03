@@ -10,10 +10,11 @@ let room = HBInit ({
 
 /* variáveis Globais */
 
-const role = { PLAYER: 0, ADMIN: 1, MASTER: 2 };
+const role = { PLAYER: 0, ADMIN: 1};
 const uniform = { COUNTRY: 0, CLUBLA: 1, CLUBEU: 2 };
 const speedCoefficient = 100 / (5 * (0.99 ** 60 + 1));
 const announcementColor = 0xfffafa;
+const {adminPassword} = require('./config')
 let point = [
     { x: 0, y: 0 },
     { x: 0, y: 0 }
@@ -87,6 +88,12 @@ let commands = {
         roles: role.ADMIN,
         desc: `Este comando concede ADMIN para outro player`,
         function: adminCommand
+    },
+    sala : {
+        similar: ['room', 'mapa'],
+        roles: role.ADMIN,
+        desc: `Este comando altera o mapa`,
+        function: roomCommand
     }
 };
 
@@ -1207,4 +1214,84 @@ function adminCommand(player, message) {
 
 function leaveCommmand(player, message){
     room.kickPlayer(player.id, "Tchau!", false)
+}
+
+function roomCommand(player, message){
+    msgArray = message.split(/ +/).slice(1)
+    if (!player.admin) {
+        room.sendAnnouncement(`Apenas administradores podem usar esse comando`, player.id, announcementColor, "bold", Notification.CHAT)
+        return;
+    }
+    if (msgArray.length < 1 ){
+        room.sendAnnouncement(`Uso correto: !sala nome`, player.id, announcementColor, "bold", Notification.CHAT)
+        return
+    }
+
+    let nome = msgArray[0].toLowerCase()
+
+    if (mapas[nome]){
+        room.setCustomStadium(mapas[nome])
+        room.sendAnnouncement(`O mapa foi trocado para ${mapas[nome].name} por ${player.id}`, null, announcementColor, "bold", Notification.CHAT)
+    } else {
+        room.sendAnnouncement(`Mapa ${nome} não encontrada.`, player.id, announcementColor, "bold". Notification.CHAT)
+    }
+}
+
+function teamCommand(player, message){
+    if (!player.admin){
+        room.sendAnnouncement(`Você precisa ser administrador para usar esse comando!`, player.id, announcementColor, "bold", Notification.CHAT)
+        return
+    }
+
+    let args = message.split(/ +/).slice(1)
+
+    if (args.length < 2){
+        room.sendAnnouncement(`[PV] Uso incorreto! Utilize dessa forma: !time <red(1)/blue(2)> jogador1, jogador2, jogador3.`, player.id, announcementColor, "bold", Notification.CHAT)
+    }
+
+    let teams = parseInt(args[0])
+
+    if(![0, 1, 2].includes(teams)) {
+        room.sendAnnouncement(`[PV] Número de time inválido. Use 0(espectador), 1 (mandante) ou 2 (visitante).`, player.id, announcementColor, "bold", Notification.CHAT)
+    }
+
+    const RawList = message.split(/ +/).slice(2).join(" ");
+	const nameList = RawList.split(",").map(name => name.trim().toLowerCase());
+	const players = room.getPlayerList();
+
+	const matched = [];
+	const notFound = [];
+	const duplicates = [];
+
+	for (const name of nameList) {
+		if (matched.some(p => p.name.toLowerCase().includes(name))) {
+			duplicates.push(name);
+			continue;
+		}
+
+		const playerMatch = players.find(p => p.name.toLowerCase().includes(name));
+
+		if (playerMatch) {
+			matched.push(playerMatch);
+		} else {
+			notFound.push(name);
+		}
+	}
+
+	for (const p of matched) {
+		room.setPlayerTeam(p.id, team);
+	}
+
+    if (matched.length > 0) {
+		const list = matched.map(p => p.name).join(", ");
+		room.sendAnnouncement(`${matched.length} jogador(es) movido(s) para o time ${team}: ${list}`, null, announcementColor, "bold", Notification.CHAT);
+	}
+
+	if (notFound.length > 0) {
+		room.sendAnnouncement(`[PV] Não encontrado(s): ${notFound.join(", ")}`, player.id, announcementColor, "bold", Notification.CHAT);
+	}
+
+	if (duplicates.length > 0) {
+		room.sendAnnouncement(`[PV] Ignorado(s) por duplicação: ${duplicates.join(", ")}`, player.id, announcementColor, "bold", Notification.CHAT);
+	}
 }
