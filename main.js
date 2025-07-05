@@ -13,6 +13,7 @@ let playerAuth = [];
 let authWhiteList = [];
 const Role = { PLAYER: 0, ADMIN: 1};
 const Uniform = { CLUBLA: 0, CLUBEU: 1, CLUBCS: 2 };
+let adminPassword = "messi"
 let speedCoefficient = 100 / (5 * (0.99 ** 60 + 1));
 let announcementColor = 0xfffafa;
 let point = [
@@ -87,12 +88,18 @@ const commands = {
         "desc": `Este comando concede ADMIN para outro player`,
         "function": adminCommand,
     },
+    "unadmin": {
+        "similar": ["unadm"],
+        "roles": Role.ADMIN,
+        "desc": `Este comando remove ADMIN de um jogador`,
+        "function": unadminCommand,
+    },
     "sala": {
         "similar": ['room', 'mapa'],
         "roles": Role.ADMIN,
         "desc": `Este comando altera o mapa`,
         "function": roomCommand,
-    }
+    },
 };
 
 /* Lista de uniforms */
@@ -630,7 +637,6 @@ room.onGameStart = function () {
 
 room.onPlayerJoin = function(player) {
     room.sendAnnouncement(centerText(`[PV] Bem-Vindo ${player.name}! digite "!ajuda" para ver os comandos do server.`), player.id, announcementColor, "bold", Notification.CHAT);
-    updateAdmins();
     let players = room.getPlayerList()
     if(players.length < 7){
         numberEachTeam = parseInt(players.length / 2)
@@ -640,7 +646,6 @@ room.onPlayerJoin = function(player) {
 }
 
 room.onPlayerLeave = function(player) {
-    updateAdmins()
     let players = room.getPlayerList()
     if(players.length < 7){
         numberEachTeam = parseInt(players.length / 2)
@@ -794,13 +799,6 @@ function getCommand(commandStr){
     return false
 }
 
-function updateAdmins() {
-    let players = room.getPlayerList();
-    if (players.length == 0) return;
-    if (players.find((player) => player.admin) != null) return;
-    room.setPlayerAdmin(players[0].id, true);
-}
-
 function centerText(string){
     let space = parseInt((80 - string.length) * 0.8, 10);
     return ''.repeat(space) + string + ''.repeat(space)
@@ -913,7 +911,7 @@ function helpCommand(player, message) {
         }
         if (commandString.slice(commandString.length - 1) === ":") commandString += ` None,`;
 		commandString = commandString.substring(0, commandString.length - 1) + ".";
-        commandString += "\n\nPara obter informações sobre um comando em específico, digite '\'!ajuda <nome do comando>\'.";
+        commandString += "\n\nPara obter informações sobre um comando em específico, digite '\'!ajuda <nome do comando>'\'.";
 		room.sendAnnouncement(commandString, player.id, announcementColor, "bold", Notification.CHAT);
     }
     else if (msgArray.length >= 1) {
@@ -1010,14 +1008,36 @@ function adminCommand(player, message) {
             let target = matches[0]
             room.setPlayerAdmin(target.id, true)
             authWhiteList.push(playerAuth[target.id])
-            room.sendAnnouncement(`${target.name} agora é admin da sala" Concebido por ${player.name}.`, null, announcementColor, "bold", Notification.CHAT)
+            room.sendAnnouncement(`"${target.name}" agora é admin da sala! Concebido por ${player.name}.`, null, announcementColor, "bold", Notification.CHAT)
         } else if (matches.length > 1){
-            room.sendAnnouncement(`Mais de um jogador corresponde a "${msgArray[0]}". Seja mais específico!`, player.id, announcementColor, "bold")
+            room.sendAnnouncement(`Mais de um jogador corresponde a "${msgArray[0]}". Seja mais específico!`, player.id, announcementColor, "bold", Notification.CHAT)
         } else {
-            room.sendAnnouncement(`Nenhum jogador corresponde a "${msgArray[0]}".`, player.id, announcementColor, "bold")
+            room.sendAnnouncement(`Nenhum jogador corresponde a "${msgArray[0]}".`, player.id, announcementColor, "bold", Notification.CHAT)
         }
     } else if (!player.admin && msgArray.length >= 1 && msgArray[0] !== adminPassword) {
-        room.sendAnnouncement(`Comando inválido ou você não tem permissão.`, player.id, announcementColor, "bold")
+        room.sendAnnouncement(`Comando inválido ou você não tem permissão.`, player.id, announcementColor, "bold", Notification.CHAT)
+    }
+}
+
+function unadminCommand(player, message) {
+    let msgArray = message.split(/ +/).slice(1)
+    if (msgArray.length >= 1 && player.admin){
+        let players = room.getPlayerList()
+        let targetName = msgArray[0].toLowerCase()
+        let matches = players.filter(p => p.name.toLowerCase().includes(targetName))
+
+        if (matches.length === 1){
+            let target = matches[0]
+            room.setPlayerAdmin(target.id, false)
+            authWhiteList.push(playerAuth[target.id])
+            room.sendAnnouncement(`"${target.name}" deixo de ser admin da sala! Removido por ${player.name}.`, null, announcementColor, "bold", Notification.CHAT)
+        } else if (matches.length > 1){
+            room.sendAnnouncement(`Mais de um jogador corresponde a "${msgArray[0]}". Seja mais específico!`, player.id, announcementColor, "bold", Notification.CHAT)
+        } else {
+            room.sendAnnouncement(`Nenhum jogador corresponde a "${msgArray[0]}".`, player.id, announcementColor, "bold", Notification.CHAT)
+        }
+    } else if (!player.admin && msgArray.length >= 1 && msgArray[0] !== adminPassword) {
+        room.sendAnnouncement(`Comando inválido ou você não tem permissão.`, player.id, announcementColor, "bold", Notification.CHAT)
     }
 }
 
