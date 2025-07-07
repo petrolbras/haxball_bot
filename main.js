@@ -26,6 +26,8 @@ let penultPlayerKick;
 let undefeatedScore = 0;
 let players;
 let numberEachTeam;
+let isHomeReserve = false;
+let isGuestReserve = false;
 
 /* Cores */
 
@@ -66,13 +68,13 @@ const commands = {
     },
     "uniforme": {
         "similar": ['uni', 'uniforms', 'uniform'],
-        "roles": Role.PLAYER,
+        "roles": Role.ADMIN,
         "desc": `Este comando mostra todos os uniforms disponíveis para seu time vestir.`,
         "function": uniformCommand,
     },
     "reserva": {
         "similar": ['sub'],
-        "roles": Role.PLAYER,
+        "roles": Role.ADMIN,
         "desc": `Este comando muda o uniforme de seu time para o uniforme reserva disponível.`,
         "function": reserveCommand,
     },
@@ -595,10 +597,10 @@ let uniforms = {
             "color2": 0xffff00,
             "color3": 0x006400,
             "angle2": 90,
-            "textcolor2": 0x000000,
-            "color21": 0xff0000,
+            "textcolor2": 0xffffff,
+            "color21": 0x006400,
             "color22": 0xffff00,
-            "color23": 0x006400
+            "color23": 0xff0000
         },
         "cdl": {
             "name": "Catadores de Latinha",
@@ -639,6 +641,8 @@ room.onGameStart = function () {
 
 	Hposs = 0;
 	Gposs = 0;
+    isHomeReserve = false;
+    isGuestReserve = false;
 }
 
 room.onPlayerJoin = function(player) {
@@ -986,16 +990,28 @@ function uniformCommand (player,message){
 }
 
 function reserveCommand(player){
-    if (player.team === 1 && nameHome !== 'Mandante'){
-        room.setTeamColors(player.team, uniforms[acronymHome].angle2, uniforms[acronymHome].textcolor2, [uniforms[acronymHome].color21, uniforms[acronymHome].color22, uniforms[acronymHome].color23])
-    } else if (player.team === 1 && nameHome === 'Mandante'){
-        room.sendAnnouncement(`[PV] Seu time ainda não tem um uniforme, digite !uniforme e veja as possibilidades.`, player.id, announcementColor, "bold", Notification.CHAT)
+    if (player.team === 1){
+        if (!isHomeReserve){
+            room.setTeamColors(player.team, uniforms[acronymHome].angle2, uniforms[acronymHome].textcolor2, [uniforms[acronymHome].color21, uniforms[acronymHome].color22, uniforms[acronymHome].color23])
+            room.sendAnnouncement(`[PV] Uniforme reserva do "${nameHome}" aplicado.`, player.id, announcementColor, "bold", Notification.CHAT);
+            isHomeReserve = true
+        } else {
+            room.setTeamColors(player.team, uniforms[acronymHome].angle, uniforms[acronymHome].textcolor, [uniforms[acronymHome].color1, uniforms[acronymHome].color2, uniforms[acronymHome].color3]);
+            room.sendAnnouncement(`[PV] Uniforme principal do "${nameHome}" restaurado.`, player.id, announcementColor, "bold", Notification.CHAT);
+            isHomeReserve = false;
+        }
     }
 
-    if (player.team === 2 && nameGuest !== 'Visitante'){
-        room.setTeamColors(player.team, uniforms[acronymGuest].angle2, uniforms[acronymGuest].textcolor2, [uniforms[acronymGuest].color21, uniforms[acronymGuest].color22, uniforms[acronymGuest].color23])
-    } else if (player.team === 2 && nameGuest === 'Visitante'){
-        room.sendAnnouncement(`[PV] Seu time ainda não tem um uniforme, digite !uniforme e veja as possibilidades.`, player.id, announcementColor, "bold", Notification.CHAT)
+    if (player.team === 2){
+        if (!isGuestReserve) {
+            room.setTeamColors(player.team, uniforms[acronymGuest].angle2, uniforms[acronymGuest].textcolor2, [uniforms[acronymGuest].color21, uniforms[acronymGuest].color22, uniforms[acronymGuest].color23])
+            room.sendAnnouncement(`[PV] Uniforme reserva do '${nameGuest}' aplicado.`, player.id, announcementColor, "bold", Notification.CHAT);
+            isGuestReserve = true
+        } else {
+            room.setTeamColors(player.team, uniforms[acronymGuest].angle, uniforms[acronymGuest].textcolor, [uniforms[acronymGuest].color1, uniforms[acronymGuest].color2, uniforms[acronymGuest].color3]);
+            room.sendAnnouncement(`[PV] Uniforme principal do '${nameGuest}' restaurado.`, player.id, announcementColor, "bold", Notification.CHAT);
+            isGuestReserve = false;
+        }
     }
 }
 
