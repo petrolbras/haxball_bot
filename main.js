@@ -3,7 +3,7 @@
 let room = HBInit ({
     roomName: "Teste",
     maxPlayers: 16,
-    noPlayer: true,
+    noPlayer: false,
     public: false,
     geo: { "code": 'br', "lat": -12.9704, "lon": -38.5124 }
 });
@@ -28,6 +28,7 @@ let players;
 let numberEachTeam;
 let isHomeReserve = false;
 let isGuestReserve = false;
+let afkPlayers = new Set();
 
 /* Cores */
 
@@ -108,6 +109,12 @@ const commands = {
         "desc": `Este comando altera o mapa`,
         "function": roomCommand,
     },
+    "afk": {
+        "similar": [],
+        "roles": Role.PLAYER,
+        "desc": `Este comando permite você ficar AFK por tempo ilimitado`,
+        "function": afkCommand,
+    }
 };
 
 /* Lista de uniforms */
@@ -725,7 +732,17 @@ room.onTeamGoal = function (team) {
 	room.sendAnnouncement(centerText(`${emojiHome} ${nameHome} ${scores.red} - ${scores.blue} ${nameGuest} ${emojiGuest}`), null, announcementColor, "bold", 0);
 }
 
-room.onPlayerTeamChange = function () {
+room.onPlayerTeamChange = function (player) {
+    if(player.id == 0) {
+        room.setPlayerTeam(player.id, 0);
+        room.sendAnnouncement(`[⚠️] Você não pode colocar o bot para jogar!`, null , welcomeColor, "bold", Notification.CHAT);
+    }
+
+    if(afkPlayers.has(player.id)) {
+        room.setPlayerTeam(player.id, 0);
+        room.sendAnnouncement(`[⚠️] O jogador "${player.name}" está AFK`, null , welcomeColor, "bold", Notification.CHAT);
+    }
+
 	updateTeams();
 }
 
@@ -1013,7 +1030,6 @@ function uniformCommand (player,message) {
 
 }
 
-
 function reserveCommand(player){
     if (player.team === 1){
         if (!isHomeReserve){
@@ -1180,4 +1196,22 @@ function teamCommand(player, message){
 	if (duplicates.length > 0) {
 		room.sendAnnouncement(`[PV] Ignorado(s) por duplicação: ${duplicates.join(", ")}`, player.id, announcementColor, "bold", Notification.CHAT);
 	}
+}
+
+function afkCommand(player, message) {
+    const isAFK = afkPlayers.has(player.id)
+
+    if (player.team === 1 || player.team === 2) {
+        room.sendAnnouncement(`❌ [PV] Você não pode ativar AFK enquanto está em jogo.`, player.id, welcomeColor, "bold", Notification.CHAT);
+        return;
+    }
+
+    if (isAFK){
+        afkPlayers.delete(player.id)
+        room.sendAnnouncement(`[🔆] O jogador "${player.name}" acordou!`, null, welcomeColor, "bold", Notification.CHAT);
+    } else {
+        afkPlayers.add(player.id);
+        room.setPlayerTeam(player.id, 0);
+        room.sendAnnouncement(`[💤] O jogador "${player.name}" ficou AFK!`, null, welcomeColor, "bold", Notification.CHAT);
+    }
 }
