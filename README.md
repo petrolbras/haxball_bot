@@ -1,4 +1,4 @@
-# 🏟️ Haxball Bot de Torneio
+<h2 align="center"> # 🏟️ Haxball Bot de Torneio 🏟️ </h2>
 
 
 Bot headless personalizável para organização de partidas no Haxball. Oferece comandos administrativos e funcionais para controle de mapas, times, uniformes e reservas, com foco em torneios, ligas e salas públicas.
