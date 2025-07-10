@@ -4,7 +4,6 @@
 Bot headless personalizável para organização de partidas no Haxball. Oferece comandos administrativos e funcionais para controle de mapas, times, uniformes e reservas, com foco em torneios, ligas e salas públicas.
 
 ## ➤ ⚙️ Funcionalidades principais
----
 
 - `!sala <nome>` – troca de mapa customizado
 - `!time <número> jogador1, jogador2` – distribui jogadores em times
@@ -16,14 +15,12 @@ Bot headless personalizável para organização de partidas no Haxball. Oferece 
 - Controle de fluxo e proteção contra comandos mal utilizados
 
 ## ➤ 📦 Requisitos
----
 
 Se você está interessado em usar este bot -> 
 
 - A sala funciona com a integração entre a API do haxball 🔗 (https://www.haxball.com/headless).
 
 ## ➤ 🔎 Como integrar o bot?
---- 
 
 1. Abra a página da API do haxball -> 🔗 (https://www.haxball.com/headless).
 2. Abra as devtools apertando F12 e selecione o console
@@ -79,7 +76,7 @@ let adminPassword = example
 ```
 
 ## ➤ 🌍 Linguas atuais
----
+
 - Português do Brasil
 
 ### 📩 Feedback
