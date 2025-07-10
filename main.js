@@ -29,10 +29,11 @@ let numberEachTeam;
 let isHomeReserve = false;
 let isGuestReserve = false;
 let afkPlayers = new Set();
+let mapaAtual = false
 
 /* Cores */
 
-let announcementColor = 0xfffafa;
+let announcementColor = 0xE20007;
 let welcomeColor = 0x47A2E7;
 let commandsColor = 0xE1BB32;
 
@@ -629,6 +630,2299 @@ let uniforms = {
 
 /* Estádios */
 
+const mapas = {
+
+    "x3": `{
+    "name": "Arena x3",
+	"width": 648,
+	"height": 270,  
+	"spawnDistance": 350,
+	"bg": {
+		"type": "",
+		"width": 550,
+		"height": 240,
+		"kickOffRadius": 80,
+		"cornerRadius": 0,
+		"color": "1b2029"
+	},
+	"vertexes": [
+		{
+			"x": 550,
+			"y": 240,
+			"trait": "ballArea"
+		},
+		{
+			"x": 550,
+			"y": -240,
+			"trait": "ballArea"
+		},
+		{
+			"x": 0,
+			"y": 270,
+			"trait": "kickOffBarrier"
+		},
+		{
+			"x": 0,
+			"y": 80,
+			"trait": "kickOffBarrier",
+			"color": "F8F8F8",
+			"vis": true,
+			"curve": 180
+		},
+		{
+			"x": 0,
+			"y": -80,
+			"trait": "kickOffBarrier",
+			"color": "F8F8F8",
+			"vis": true,
+			"curve": 180
+		},
+		{
+			"x": 0,
+			"y": -270,
+			"trait": "kickOffBarrier"
+		},
+		{
+			"x": -550,
+			"y": -80,
+			"cMask": [
+				"red",
+				"blue",
+				"ball"
+			],
+			"trait": "goalNet",
+			"curve": 0,
+			"color": "FF6666",
+			"pos": [
+				-700,
+				-80
+			]
+		},
+		{
+			"x": -590,
+			"y": -80,
+			"cMask": [
+				"ball"
+			],
+			"trait": "goalNet",
+			"curve": -28.940588200131774,
+			"color": "FF6666",
+			"pos": [
+				-700,
+				-80
+			]
+		},
+		{
+			"x": -590,
+			"y": 80,
+			"cMask": [
+				"ball"
+			],
+			"trait": "goalNet",
+			"curve": -28.940588200131774,
+			"color": "FF6666",
+			"pos": [
+				-700,
+				80
+			]
+		},
+		{
+			"x": -550,
+			"y": 80,
+			"cMask": [
+				"red",
+				"blue",
+				"ball"
+			],
+			"trait": "goalNet",
+			"curve": 0,
+			"color": "FF6666",
+			"pos": [
+				-700,
+				80
+			]
+		},
+		{
+			"x": 550,
+			"y": -80,
+			"cMask": [
+				"red",
+				"blue",
+				"ball"
+			],
+			"trait": "goalNet",
+			"curve": 0,
+			"color": "479BD8",
+			"pos": [
+				700,
+				-80
+			]
+		},
+		{
+			"x": 590,
+			"y": -80,
+			"cMask": [
+				"ball"
+			],
+			"trait": "goalNet",
+			"curve": 0,
+			"color": "479BD8",
+			"pos": [
+				700,
+				-80
+			]
+		},
+		{
+			"x": 590,
+			"y": 80,
+			"cMask": [
+				"ball"
+			],
+			"trait": "goalNet",
+			"curve": 0,
+			"color": "479BD8",
+			"pos": [
+				700,
+				80
+			]
+		},
+		{
+			"x": 550,
+			"y": 80,
+			"cMask": [
+				"red",
+				"blue",
+				"ball"
+			],
+			"trait": "goalNet",
+			"curve": 0,
+			"color": "479BD8",
+			"pos": [
+				700,
+				80
+			]
+		},
+		{
+			"x": -550,
+			"y": 80,
+			"bCoef": 1.25,
+			"cMask": [
+				"ball"
+			],
+			"trait": "ballArea",
+			"color": "F8F8F8",
+			"pos": [
+				-700,
+				80
+			]
+		},
+		{
+			"x": -550,
+			"y": 240,
+			"bCoef": 1.25,
+			"cMask": [
+				"ball"
+			],
+			"trait": "ballArea",
+			"color": "F8F8F8"
+		},
+		{
+			"x": -550,
+			"y": -80,
+			"bCoef": 1.25,
+			"cMask": [
+				"ball"
+			],
+			"trait": "ballArea",
+			"color": "F8F8F8",
+			"pos": [
+				-700,
+				-80
+			]
+		},
+		{
+			"x": -550,
+			"y": -240,
+			"bCoef": 1.25,
+			"cMask": [
+				"ball"
+			],
+			"trait": "ballArea",
+			"color": "F8F8F8"
+		},
+		{
+			"x": -550,
+			"y": 240,
+			"bCoef": 1,
+			"cMask": [
+				"ball"
+			],
+			"trait": "ballArea"
+		},
+		{
+			"x": 550,
+			"y": 240,
+			"bCoef": 1,
+			"cMask": [
+				"ball"
+			],
+			"trait": "ballArea"
+		},
+		{
+			"x": 550,
+			"y": 80,
+			"bCoef": 1.25,
+			"cMask": [
+				"ball"
+			],
+			"trait": "ballArea",
+			"pos": [
+				700,
+				80
+			]
+		},
+		{
+			"x": 550,
+			"y": 240,
+			"bCoef": 1.25,
+			"cMask": [
+				"ball"
+			],
+			"trait": "ballArea"
+		},
+		{
+			"x": 550,
+			"y": -240,
+			"bCoef": 1.25,
+			"cMask": [
+				"ball"
+			],
+			"trait": "ballArea",
+			"color": "F8F8F8"
+		},
+		{
+			"x": 550,
+			"y": -80,
+			"bCoef": 1.25,
+			"cMask": [
+				"ball"
+			],
+			"trait": "ballArea",
+			"color": "F8F8F8",
+			"pos": [
+				700,
+				-80
+			]
+		},
+		{
+			"x": 550,
+			"y": -240,
+			"bCoef": 0,
+			"cMask": [
+				"ball"
+			],
+			"trait": "ballArea"
+		},
+		{
+			"x": 550,
+			"y": -240,
+			"bCoef": 0,
+			"cMask": [
+				"ball"
+			],
+			"trait": "ballArea"
+		},
+		{
+			"x": -550,
+			"y": -240,
+			"bCoef": 1,
+			"cMask": [
+				"ball"
+			],
+			"trait": "ballArea",
+			"curve": 0
+		},
+		{
+			"x": 550,
+			"y": -240,
+			"bCoef": 1,
+			"cMask": [
+				"ball"
+			],
+			"trait": "ballArea",
+			"curve": 0
+		},
+		{
+			"x": 0,
+			"y": -240,
+			"bCoef": 0.1,
+			"cMask": [
+				"red",
+				"blue"
+			],
+			"cGroup": [
+				"redKO",
+				"blueKO"
+			],
+			"trait": "kickOffBarrier"
+		},
+		{
+			"x": 0,
+			"y": -80,
+			"bCoef": 0.1,
+			"cMask": [
+				"red",
+				"blue"
+			],
+			"cGroup": [
+				"redKO",
+				"blueKO"
+			],
+			"trait": "kickOffBarrier"
+		},
+		{
+			"x": 0,
+			"y": 80,
+			"bCoef": 0.1,
+			"cMask": [
+				"red",
+				"blue"
+			],
+			"cGroup": [
+				"redKO",
+				"blueKO"
+			],
+			"trait": "kickOffBarrier"
+		},
+		{
+			"x": 0,
+			"y": 240,
+			"bCoef": 0.1,
+			"cMask": [
+				"red",
+				"blue"
+			],
+			"cGroup": [
+				"redKO",
+				"blueKO"
+			],
+			"trait": "kickOffBarrier"
+		},
+		{
+			"x": 0,
+			"y": -80,
+			"bCoef": 0.1,
+			"cMask": [
+				"red",
+				"blue"
+			],
+			"trait": "kickOffBarrier",
+			"vis": true,
+			"color": "F8F8F8"
+		},
+		{
+			"x": 0,
+			"y": 80,
+			"bCoef": 0.1,
+			"cMask": [
+				"red",
+				"blue"
+			],
+			"trait": "kickOffBarrier",
+			"vis": true,
+			"color": "F8F8F8"
+		},
+		{
+			"x": 0,
+			"y": 80,
+			"trait": "kickOffBarrier",
+			"color": "F8F8F8",
+			"vis": true,
+			"curve": -180
+		},
+		{
+			"x": 0,
+			"y": -80,
+			"trait": "kickOffBarrier",
+			"color": "F8F8F8",
+			"vis": true,
+			"curve": -180
+		},
+		{
+			"x": 0,
+			"y": 80,
+			"trait": "kickOffBarrier",
+			"color": "F8F8F8",
+			"vis": true,
+			"curve": 0
+		},
+		{
+			"x": 0,
+			"y": -80,
+			"trait": "kickOffBarrier",
+			"color": "F8F8F8",
+			"vis": true,
+			"curve": 0
+		},
+		{
+			"x": -557.5,
+			"y": 80,
+			"bCoef": 0.1,
+			"cMask": [
+				"ball"
+			],
+			"trait": "ballArea",
+			"curve": 0,
+			"vis": false,
+			"pos": [
+				-700,
+				80
+			]
+		},
+		{
+			"x": -557.5,
+			"y": 240,
+			"bCoef": 2,
+			"cMask": [
+				"ball"
+			],
+			"trait": "ballArea",
+			"curve": 0,
+			"vis": false
+		},
+		{
+			"x": -557.5,
+			"y": -240,
+			"bCoef": 2,
+			"cMask": [
+				"ball"
+			],
+			"trait": "ballArea",
+			"vis": false,
+			"curve": 0
+		},
+		{
+			"x": -557.5,
+			"y": -80,
+			"bCoef": 0.1,
+			"cMask": [
+				"ball"
+			],
+			"trait": "ballArea",
+			"vis": false,
+			"curve": 0,
+			"pos": [
+				-700,
+				-80
+			]
+		},
+		{
+			"x": 557.5,
+			"y": -240,
+			"bCoef": 2,
+			"cMask": [
+				"ball"
+			],
+			"trait": "ballArea",
+			"vis": false,
+			"curve": 0
+		},
+		{
+			"x": 557.5,
+			"y": -80,
+			"bCoef": 0.1,
+			"cMask": [
+				"ball"
+			],
+			"trait": "ballArea",
+			"vis": false,
+			"curve": 0,
+			"pos": [
+				700,
+				-80
+			]
+		},
+		{
+			"x": 557.5,
+			"y": 80,
+			"bCoef": 0.1,
+			"cMask": [
+				"ball"
+			],
+			"trait": "ballArea",
+			"curve": 0,
+			"vis": false,
+			"pos": [
+				700,
+				80
+			]
+		},
+		{
+			"x": 557.5,
+			"y": 240,
+			"bCoef": 2,
+			"cMask": [
+				"ball"
+			],
+			"trait": "ballArea",
+			"curve": 0,
+			"vis": false
+		},
+		{
+			"x": 0,
+			"y": -80,
+			"bCoef": 0.1,
+			"trait": "line"
+		},
+		{
+			"x": 0,
+			"y": 80,
+			"bCoef": 0.1,
+			"trait": "line"
+		},
+		{
+			"x": -550,
+			"y": -80,
+			"bCoef": 0.1,
+			"trait": "line"
+		},
+		{
+			"x": -550,
+			"y": 80,
+			"bCoef": 0.1,
+			"trait": "line"
+		},
+		{
+			"x": 550,
+			"y": -80,
+			"bCoef": 0.1,
+			"trait": "line"
+		},
+		{
+			"x": 550,
+			"y": 80,
+			"bCoef": 0.1,
+			"trait": "line"
+		},
+		{
+			"x": -381,
+			"y": 240,
+			"bCoef": 0.1,
+			"trait": "line"
+		},
+		{
+			"x": -381,
+			"y": 256,
+			"bCoef": 0.1,
+			"trait": "line"
+		},
+		{
+			"x": -550,
+			"y": 200,
+			"bCoef": 0.1,
+			"trait": "line",
+			"color": "F8F8F8",
+			"curve": -90
+		},
+		{
+			"x": -390,
+			"y": 70,
+			"bCoef": 0.1,
+			"trait": "line",
+			"color": "F8F8F8",
+			"curve": 0
+		},
+		{
+			"x": -550,
+			"y": 226,
+			"bCoef": 0.1,
+			"trait": "line",
+			"curve": -90
+		},
+		{
+			"x": -536,
+			"y": 240,
+			"bCoef": 0.1,
+			"trait": "line",
+			"curve": -90
+		},
+		{
+			"x": -550,
+			"y": -200,
+			"bCoef": 0.1,
+			"trait": "line",
+			"color": "F8F8F8",
+			"curve": 90
+		},
+		{
+			"x": -390,
+			"y": -70,
+			"bCoef": 0.1,
+			"trait": "line",
+			"color": "F8F8F8",
+			"curve": 0
+		},
+		{
+			"x": -550,
+			"y": -226,
+			"bCoef": 0.1,
+			"trait": "line",
+			"curve": 90
+		},
+		{
+			"x": -536,
+			"y": -240,
+			"bCoef": 0.1,
+			"trait": "line",
+			"curve": 90
+		},
+		{
+			"x": -556,
+			"y": 123,
+			"bCoef": 0.1,
+			"trait": "line"
+		},
+		{
+			"x": -575,
+			"y": 123,
+			"bCoef": 0.1,
+			"trait": "line"
+		},
+		{
+			"x": 556,
+			"y": 123,
+			"bCoef": 0.1,
+			"trait": "line"
+		},
+		{
+			"x": 575,
+			"y": 123,
+			"bCoef": 0.1,
+			"trait": "line"
+		},
+		{
+			"x": -556,
+			"y": -123,
+			"bCoef": 0.1,
+			"trait": "line"
+		},
+		{
+			"x": -575,
+			"y": -123,
+			"bCoef": 0.1,
+			"trait": "line"
+		},
+		{
+			"x": 556,
+			"y": -123,
+			"bCoef": 0.1,
+			"trait": "line"
+		},
+		{
+			"x": 575,
+			"y": -123,
+			"bCoef": 0.1,
+			"trait": "line"
+		},
+		{
+			"x": -381,
+			"y": -240,
+			"bCoef": 0.1,
+			"trait": "line"
+		},
+		{
+			"x": -381,
+			"y": -256,
+			"bCoef": 0.1,
+			"trait": "line"
+		},
+		{
+			"x": 381,
+			"y": 240,
+			"bCoef": 0.1,
+			"trait": "line"
+		},
+		{
+			"x": 381,
+			"y": -240,
+			"bCoef": 0.1,
+			"trait": "line"
+		},
+		{
+			"x": 381,
+			"y": -256,
+			"bCoef": 0.1,
+			"trait": "line"
+		},
+		{
+			"x": 550,
+			"y": -226,
+			"bCoef": 0.1,
+			"trait": "line",
+			"curve": -90
+		},
+		{
+			"x": 536,
+			"y": -240,
+			"bCoef": 0.1,
+			"trait": "line",
+			"curve": -90
+		},
+		{
+			"x": 550,
+			"y": 226,
+			"bCoef": 0.1,
+			"trait": "line",
+			"curve": 90
+		},
+		{
+			"x": 536,
+			"y": 240,
+			"bCoef": 0.1,
+			"trait": "line",
+			"curve": 90
+		},
+		{
+			"x": 550,
+			"y": 200,
+			"bCoef": 0.1,
+			"trait": "line",
+			"color": "F8F8F8",
+			"curve": 90
+		},
+		{
+			"x": 390,
+			"y": 70,
+			"bCoef": 0.1,
+			"trait": "line",
+			"color": "F8F8F8",
+			"curve": 90
+		},
+		{
+			"x": 550,
+			"y": -200,
+			"bCoef": 0.1,
+			"trait": "line",
+			"color": "F8F8F8",
+			"curve": -90
+		},
+		{
+			"x": 390,
+			"y": -70,
+			"bCoef": 0.1,
+			"trait": "line",
+			"color": "F8F8F8",
+			"curve": -90
+		},
+		{
+			"x": 390,
+			"y": 70,
+			"bCoef": 0.1,
+			"trait": "line",
+			"color": "F8F8F8",
+			"curve": 0
+		},
+		{
+			"x": 390,
+			"y": -70,
+			"bCoef": 0.1,
+			"trait": "line",
+			"color": "F8F8F8",
+			"curve": 0
+		},
+		{
+			"x": -375,
+			"y": 1,
+			"bCoef": 0.1,
+			"trait": "line",
+			"curve": 180
+		},
+		{
+			"x": -375,
+			"y": -1,
+			"bCoef": 0.1,
+			"trait": "line",
+			"curve": 180
+		},
+		{
+			"x": -375,
+			"y": 3,
+			"bCoef": 0.1,
+			"trait": "line",
+			"curve": 180
+		},
+		{
+			"x": -375,
+			"y": -3,
+			"bCoef": 0.1,
+			"trait": "line",
+			"curve": 180
+		},
+		{
+			"x": -375,
+			"y": -2,
+			"bCoef": 0.1,
+			"trait": "line",
+			"curve": 180
+		},
+		{
+			"x": -375,
+			"y": 2,
+			"bCoef": 0.1,
+			"trait": "line",
+			"curve": 180
+		},
+		{
+			"x": -375,
+			"y": -3.5,
+			"bCoef": 0.1,
+			"trait": "line",
+			"curve": 180
+		},
+		{
+			"x": -375,
+			"y": 3.5,
+			"bCoef": 0.1,
+			"trait": "line",
+			"curve": 180
+		},
+		{
+			"x": 375,
+			"y": 1,
+			"bCoef": 0.1,
+			"trait": "line",
+			"curve": 180
+		},
+		{
+			"x": 375,
+			"y": -1,
+			"bCoef": 0.1,
+			"trait": "line",
+			"curve": 180
+		},
+		{
+			"x": 375,
+			"y": 3,
+			"bCoef": 0.1,
+			"trait": "line",
+			"curve": 180
+		},
+		{
+			"x": 375,
+			"y": -3,
+			"bCoef": 0.1,
+			"trait": "line",
+			"curve": 180
+		},
+		{
+			"x": 375,
+			"y": -2,
+			"bCoef": 0.1,
+			"trait": "line",
+			"curve": 180
+		},
+		{
+			"x": 375,
+			"y": 2,
+			"bCoef": 0.1,
+			"trait": "line",
+			"curve": 180
+		},
+		{
+			"x": 375,
+			"y": -3.5,
+			"bCoef": 0.1,
+			"trait": "line",
+			"curve": 180
+		},
+		{
+			"x": 375,
+			"y": 3.5,
+			"bCoef": 0.1,
+			"trait": "line",
+			"curve": 180
+		},
+		{
+			"x": -277.5,
+			"y": 1,
+			"bCoef": 0.1,
+			"trait": "line",
+			"curve": 180
+		},
+		{
+			"x": -277.5,
+			"y": -1,
+			"bCoef": 0.1,
+			"trait": "line",
+			"curve": 180
+		},
+		{
+			"x": -277.5,
+			"y": 3,
+			"bCoef": 0.1,
+			"trait": "line",
+			"curve": 180
+		},
+		{
+			"x": -277.5,
+			"y": -3,
+			"bCoef": 0.1,
+			"trait": "line",
+			"curve": 180
+		},
+		{
+			"x": -277.5,
+			"y": -2,
+			"bCoef": 0.1,
+			"trait": "line",
+			"curve": 180
+		},
+		{
+			"x": -277.5,
+			"y": 2,
+			"bCoef": 0.1,
+			"trait": "line",
+			"curve": 180
+		},
+		{
+			"x": -277.5,
+			"y": -3.5,
+			"bCoef": 0.1,
+			"trait": "line",
+			"curve": 180
+		},
+		{
+			"x": -277.5,
+			"y": 3.5,
+			"bCoef": 0.1,
+			"trait": "line",
+			"curve": 180
+		},
+		{
+			"x": 277.5,
+			"y": 1,
+			"bCoef": 0.1,
+			"trait": "line",
+			"curve": 180
+		},
+		{
+			"x": 277.5,
+			"y": -1,
+			"bCoef": 0.1,
+			"trait": "line",
+			"curve": 180
+		},
+		{
+			"x": 277.5,
+			"y": 3,
+			"bCoef": 0.1,
+			"trait": "line",
+			"curve": 180
+		},
+		{
+			"x": 277.5,
+			"y": -3,
+			"bCoef": 0.1,
+			"trait": "line",
+			"curve": 180
+		},
+		{
+			"x": 277.5,
+			"y": -2,
+			"bCoef": 0.1,
+			"trait": "line",
+			"curve": 180
+		},
+		{
+			"x": 277.5,
+			"y": 2,
+			"bCoef": 0.1,
+			"trait": "line",
+			"curve": 180
+		},
+		{
+			"x": 277.5,
+			"y": -3.5,
+			"bCoef": 0.1,
+			"trait": "line",
+			"curve": 180
+		},
+		{
+			"x": 277.5,
+			"y": 3.5,
+			"bCoef": 0.1,
+			"trait": "line",
+			"curve": 180
+		}
+	],
+	"segments": [
+		{
+			"v0": 6,
+			"v1": 7,
+			"curve": 0,
+			"color": "FF6666",
+			"cMask": [
+				"red",
+				"blue",
+				"ball"
+			],
+			"trait": "goalNet",
+			"pos": [
+				-700,
+				-80
+			],
+			"y": -80
+		},
+		{
+			"v0": 7,
+			"v1": 8,
+			"curve": -28.940588200131774,
+			"color": "FF6666",
+			"cMask": [
+				"ball"
+			],
+			"trait": "goalNet",
+			"x": -590
+		},
+		{
+			"v0": 8,
+			"v1": 9,
+			"curve": 0,
+			"color": "FF6666",
+			"cMask": [
+				"red",
+				"blue",
+				"ball"
+			],
+			"trait": "goalNet",
+			"pos": [
+				-700,
+				80
+			],
+			"y": 80
+		},
+		{
+			"v0": 10,
+			"v1": 11,
+			"curve": 0,
+			"color": "479BD8",
+			"cMask": [
+				"red",
+				"blue",
+				"ball"
+			],
+			"trait": "goalNet",
+			"pos": [
+				700,
+				-80
+			],
+			"y": -80
+		},
+		{
+			"v0": 11,
+			"v1": 12,
+			"curve": 28.940588200131774,
+			"color": "479BD8",
+			"cMask": [
+				"ball"
+			],
+			"trait": "goalNet",
+			"x": 590
+		},
+		{
+			"v0": 12,
+			"v1": 13,
+			"curve": 0,
+			"color": "479BD8",
+			"cMask": [
+				"red",
+				"blue",
+				"ball"
+			],
+			"trait": "goalNet",
+			"pos": [
+				700,
+				80
+			],
+			"y": 80
+		},
+		{
+			"v0": 2,
+			"v1": 3,
+			"trait": "kickOffBarrier"
+		},
+		{
+			"v0": 3,
+			"v1": 4,
+			"curve": 180,
+			"vis": true,
+			"color": "F8F8F8",
+			"cGroup": [
+				"blueKO"
+			],
+			"trait": "kickOffBarrier"
+		},
+		{
+			"v0": 3,
+			"v1": 4,
+			"curve": -180,
+			"vis": true,
+			"color": "F8F8F8",
+			"cGroup": [
+				"redKO"
+			],
+			"trait": "kickOffBarrier"
+		},
+		{
+			"v0": 4,
+			"v1": 5,
+			"trait": "kickOffBarrier"
+		},
+		{
+			"v0": 14,
+			"v1": 15,
+			"vis": true,
+			"color": "F8F8F8",
+			"bCoef": 1.25,
+			"cMask": [
+				"ball"
+			],
+			"trait": "ballArea",
+			"x": -550
+		},
+		{
+			"v0": 16,
+			"v1": 17,
+			"vis": true,
+			"color": "F8F8F8",
+			"bCoef": 1.25,
+			"cMask": [
+				"ball"
+			],
+			"trait": "ballArea",
+			"x": -550
+		},
+		{
+			"v0": 18,
+			"v1": 19,
+			"vis": true,
+			"color": "F8F8F8",
+			"bCoef": 1,
+			"cMask": [
+				"ball"
+			],
+			"trait": "ballArea",
+			"y": 240
+		},
+		{
+			"v0": 20,
+			"v1": 21,
+			"vis": true,
+			"color": "F8F8F8",
+			"bCoef": 1.25,
+			"cMask": [
+				"ball"
+			],
+			"trait": "ballArea",
+			"x": 550
+		},
+		{
+			"v0": 22,
+			"v1": 23,
+			"vis": true,
+			"color": "F8F8F8",
+			"bCoef": 1.25,
+			"cMask": [
+				"ball"
+			],
+			"trait": "ballArea",
+			"x": 550
+		},
+		{
+			"v0": 24,
+			"v1": 25,
+			"vis": true,
+			"color": "F8F8F8",
+			"bCoef": 0,
+			"cMask": [
+				"ball"
+			],
+			"trait": "ballArea",
+			"x": 550,
+			"y": -240
+		},
+		{
+			"v0": 26,
+			"v1": 27,
+			"curve": 0,
+			"vis": true,
+			"color": "F8F8F8",
+			"bCoef": 1,
+			"cMask": [
+				"ball"
+			],
+			"trait": "ballArea",
+			"y": -240
+		},
+		{
+			"v0": 28,
+			"v1": 29,
+			"vis": true,
+			"color": "F8F8F8",
+			"bCoef": 0.1,
+			"cMask": [
+				"red",
+				"blue"
+			],
+			"cGroup": [
+				"redKO",
+				"blueKO"
+			],
+			"trait": "kickOffBarrier"
+		},
+		{
+			"v0": 30,
+			"v1": 31,
+			"vis": true,
+			"color": "F8F8F8",
+			"bCoef": 0.1,
+			"cMask": [
+				"red",
+				"blue"
+			],
+			"cGroup": [
+				"redKO",
+				"blueKO"
+			],
+			"trait": "kickOffBarrier"
+		},
+		{
+			"v0": 38,
+			"v1": 39,
+			"curve": 0,
+			"vis": false,
+			"color": "F8F8F8",
+			"bCoef": 2,
+			"cMask": [
+				"ball"
+			],
+			"trait": "ballArea",
+			"x": -557.5
+		},
+		{
+			"v0": 40,
+			"v1": 41,
+			"curve": 0,
+			"vis": false,
+			"color": "F8F8F8",
+			"bCoef": 2,
+			"cMask": [
+				"ball"
+			],
+			"trait": "ballArea",
+			"x": -557.5
+		},
+		{
+			"v0": 42,
+			"v1": 43,
+			"curve": 0,
+			"vis": false,
+			"color": "F8F8F8",
+			"bCoef": 2,
+			"cMask": [
+				"ball"
+			],
+			"trait": "ballArea",
+			"x": 557.5
+		},
+		{
+			"v0": 44,
+			"v1": 45,
+			"curve": 0,
+			"vis": false,
+			"color": "F8F8F8",
+			"bCoef": 2,
+			"cMask": [
+				"ball"
+			],
+			"trait": "ballArea",
+			"x": 557.5
+		},
+		{
+			"v0": 46,
+			"v1": 47,
+			"curve": 0,
+			"vis": true,
+			"color": "F8F8F8",
+			"bCoef": 0.1,
+			"trait": "line",
+			"x": 0
+		},
+		{
+			"v0": 48,
+			"v1": 49,
+			"curve": 0,
+			"vis": true,
+			"color": "F8F8F8",
+			"bCoef": 0.1,
+			"trait": "line",
+			"x": -550
+		},
+		{
+			"v0": 50,
+			"v1": 51,
+			"curve": 0,
+			"vis": true,
+			"color": "F8F8F8",
+			"bCoef": 0.1,
+			"trait": "line",
+			"x": 550
+		},
+		{
+			"v0": 52,
+			"v1": 53,
+			"curve": 0,
+			"vis": true,
+			"color": "F8F8F8",
+			"bCoef": 0.1,
+			"trait": "line",
+			"x": -381
+		},
+		{
+			"v0": 54,
+			"v1": 55,
+			"curve": -90,
+			"vis": true,
+			"color": "F8F8F8",
+			"bCoef": 0.1,
+			"trait": "line"
+		},
+		{
+			"v0": 57,
+			"v1": 56,
+			"curve": -90,
+			"vis": true,
+			"color": "F8F8F8",
+			"bCoef": 0.1,
+			"trait": "line"
+		},
+		{
+			"v0": 58,
+			"v1": 59,
+			"curve": 90,
+			"vis": true,
+			"color": "F8F8F8",
+			"bCoef": 0.1,
+			"trait": "line"
+		},
+		{
+			"v0": 55,
+			"v1": 59,
+			"curve": 0,
+			"vis": true,
+			"color": "F8F8F8",
+			"bCoef": 0.1,
+			"trait": "line"
+		},
+		{
+			"v0": 61,
+			"v1": 60,
+			"curve": 90,
+			"vis": true,
+			"color": "F8F8F8",
+			"bCoef": 0.1,
+			"trait": "line"
+		},
+		{
+			"v0": 62,
+			"v1": 63,
+			"curve": 0,
+			"vis": true,
+			"color": "F8F8F8",
+			"bCoef": 0.1,
+			"trait": "line",
+			"x": -240,
+			"y": 123
+		},
+		{
+			"v0": 64,
+			"v1": 65,
+			"curve": 0,
+			"vis": true,
+			"color": "F8F8F8",
+			"bCoef": 0.1,
+			"trait": "line",
+			"x": -240,
+			"y": 123
+		},
+		{
+			"v0": 66,
+			"v1": 67,
+			"curve": 0,
+			"vis": true,
+			"color": "F8F8F8",
+			"bCoef": 0.1,
+			"trait": "line",
+			"x": -240,
+			"y": -123
+		},
+		{
+			"v0": 68,
+			"v1": 69,
+			"curve": 0,
+			"vis": true,
+			"color": "F8F8F8",
+			"bCoef": 0.1,
+			"trait": "line",
+			"x": -240,
+			"y": -123
+		},
+		{
+			"v0": 70,
+			"v1": 71,
+			"curve": 0,
+			"vis": true,
+			"color": "F8F8F8",
+			"bCoef": 0.1,
+			"trait": "line",
+			"x": -381
+		},
+		{
+			"v0": 73,
+			"v1": 74,
+			"curve": 0,
+			"vis": true,
+			"color": "F8F8F8",
+			"bCoef": 0.1,
+			"trait": "line",
+			"x": 381
+		},
+		{
+			"v0": 76,
+			"v1": 75,
+			"curve": -90,
+			"vis": true,
+			"color": "F8F8F8",
+			"bCoef": 0.1,
+			"trait": "line"
+		},
+		{
+			"v0": 78,
+			"v1": 77,
+			"curve": 90,
+			"vis": true,
+			"color": "F8F8F8",
+			"bCoef": 0.1,
+			"trait": "line"
+		},
+		{
+			"v0": 79,
+			"v1": 80,
+			"curve": 90,
+			"vis": true,
+			"color": "F8F8F8",
+			"bCoef": 0.1,
+			"trait": "line"
+		},
+		{
+			"v0": 81,
+			"v1": 82,
+			"curve": -90,
+			"vis": true,
+			"color": "F8F8F8",
+			"bCoef": 0.1,
+			"trait": "line"
+		},
+		{
+			"v0": 83,
+			"v1": 84,
+			"curve": 0,
+			"vis": true,
+			"color": "F8F8F8",
+			"bCoef": 0.1,
+			"trait": "line",
+			"x": 390
+		},
+		{
+			"v0": 86,
+			"v1": 85,
+			"curve": 180,
+			"vis": true,
+			"color": "F8F8F8",
+			"bCoef": 0.1,
+			"trait": "line",
+			"x": -375
+		},
+		{
+			"v0": 85,
+			"v1": 86,
+			"curve": 180,
+			"vis": true,
+			"color": "F8F8F8",
+			"bCoef": 0.1,
+			"trait": "line",
+			"x": -375
+		},
+		{
+			"v0": 88,
+			"v1": 87,
+			"curve": 180,
+			"vis": true,
+			"color": "F8F8F8",
+			"bCoef": 0.1,
+			"trait": "line",
+			"x": -375
+		},
+		{
+			"v0": 87,
+			"v1": 88,
+			"curve": 180,
+			"vis": true,
+			"color": "F8F8F8",
+			"bCoef": 0.1,
+			"trait": "line",
+			"x": -375
+		},
+		{
+			"v0": 90,
+			"v1": 89,
+			"curve": 180,
+			"vis": true,
+			"color": "F8F8F8",
+			"bCoef": 0.1,
+			"trait": "line",
+			"x": -375
+		},
+		{
+			"v0": 89,
+			"v1": 90,
+			"curve": 180,
+			"vis": true,
+			"color": "F8F8F8",
+			"bCoef": 0.1,
+			"trait": "line",
+			"x": -375
+		},
+		{
+			"v0": 92,
+			"v1": 91,
+			"curve": 180,
+			"vis": true,
+			"color": "F8F8F8",
+			"bCoef": 0.1,
+			"trait": "line",
+			"x": -375
+		},
+		{
+			"v0": 91,
+			"v1": 92,
+			"curve": 180,
+			"vis": true,
+			"color": "F8F8F8",
+			"bCoef": 0.1,
+			"trait": "line",
+			"x": -375
+		},
+		{
+			"v0": 94,
+			"v1": 93,
+			"curve": 180,
+			"vis": true,
+			"color": "F8F8F8",
+			"bCoef": 0.1,
+			"trait": "line",
+			"x": 375
+		},
+		{
+			"v0": 93,
+			"v1": 94,
+			"curve": 180,
+			"vis": true,
+			"color": "F8F8F8",
+			"bCoef": 0.1,
+			"trait": "line",
+			"x": 375
+		},
+		{
+			"v0": 96,
+			"v1": 95,
+			"curve": 180,
+			"vis": true,
+			"color": "F8F8F8",
+			"bCoef": 0.1,
+			"trait": "line",
+			"x": 375
+		},
+		{
+			"v0": 95,
+			"v1": 96,
+			"curve": 180,
+			"vis": true,
+			"color": "F8F8F8",
+			"bCoef": 0.1,
+			"trait": "line",
+			"x": 375
+		},
+		{
+			"v0": 98,
+			"v1": 97,
+			"curve": 180,
+			"vis": true,
+			"color": "F8F8F8",
+			"bCoef": 0.1,
+			"trait": "line",
+			"x": 375
+		},
+		{
+			"v0": 97,
+			"v1": 98,
+			"curve": 180,
+			"vis": true,
+			"color": "F8F8F8",
+			"bCoef": 0.1,
+			"trait": "line",
+			"x": 375
+		},
+		{
+			"v0": 100,
+			"v1": 99,
+			"curve": 180,
+			"vis": true,
+			"color": "F8F8F8",
+			"bCoef": 0.1,
+			"trait": "line",
+			"x": 375
+		},
+		{
+			"v0": 99,
+			"v1": 100,
+			"curve": 180,
+			"vis": true,
+			"color": "F8F8F8",
+			"bCoef": 0.1,
+			"trait": "line",
+			"x": 375
+		},
+		{
+			"v0": 102,
+			"v1": 101,
+			"curve": 180,
+			"vis": true,
+			"color": "F8F8F8",
+			"bCoef": 0.1,
+			"trait": "line",
+			"x": -277.5
+		},
+		{
+			"v0": 101,
+			"v1": 102,
+			"curve": 180,
+			"vis": true,
+			"color": "F8F8F8",
+			"bCoef": 0.1,
+			"trait": "line",
+			"x": -277.5
+		},
+		{
+			"v0": 104,
+			"v1": 103,
+			"curve": 180,
+			"vis": true,
+			"color": "F8F8F8",
+			"bCoef": 0.1,
+			"trait": "line",
+			"x": -277.5
+		},
+		{
+			"v0": 103,
+			"v1": 104,
+			"curve": 180,
+			"vis": true,
+			"color": "F8F8F8",
+			"bCoef": 0.1,
+			"trait": "line",
+			"x": -277.5
+		},
+		{
+			"v0": 106,
+			"v1": 105,
+			"curve": 180,
+			"vis": true,
+			"color": "F8F8F8",
+			"bCoef": 0.1,
+			"trait": "line",
+			"x": -277.5
+		},
+		{
+			"v0": 105,
+			"v1": 106,
+			"curve": 180,
+			"vis": true,
+			"color": "F8F8F8",
+			"bCoef": 0.1,
+			"trait": "line",
+			"x": -277.5
+		},
+		{
+			"v0": 108,
+			"v1": 107,
+			"curve": 180,
+			"vis": true,
+			"color": "F8F8F8",
+			"bCoef": 0.1,
+			"trait": "line",
+			"x": -277.5
+		},
+		{
+			"v0": 107,
+			"v1": 108,
+			"curve": 180,
+			"vis": true,
+			"color": "F8F8F8",
+			"bCoef": 0.1,
+			"trait": "line",
+			"x": -277.5
+		},
+		{
+			"v0": 110,
+			"v1": 109,
+			"curve": 180,
+			"vis": true,
+			"color": "F8F8F8",
+			"bCoef": 0.1,
+			"trait": "line",
+			"x": 277.5
+		},
+		{
+			"v0": 109,
+			"v1": 110,
+			"curve": 180,
+			"vis": true,
+			"color": "F8F8F8",
+			"bCoef": 0.1,
+			"trait": "line",
+			"x": 277.5
+		},
+		{
+			"v0": 112,
+			"v1": 111,
+			"curve": 180,
+			"vis": true,
+			"color": "F8F8F8",
+			"bCoef": 0.1,
+			"trait": "line",
+			"x": 277.5
+		},
+		{
+			"v0": 111,
+			"v1": 112,
+			"curve": 180,
+			"vis": true,
+			"color": "F8F8F8",
+			"bCoef": 0.1,
+			"trait": "line",
+			"x": 277.5
+		},
+		{
+			"v0": 114,
+			"v1": 113,
+			"curve": 180,
+			"vis": true,
+			"color": "F8F8F8",
+			"bCoef": 0.1,
+			"trait": "line",
+			"x": 277.5
+		},
+		{
+			"v0": 113,
+			"v1": 114,
+			"curve": 180,
+			"vis": true,
+			"color": "F8F8F8",
+			"bCoef": 0.1,
+			"trait": "line",
+			"x": 277.5
+		},
+		{
+			"v0": 116,
+			"v1": 115,
+			"curve": 180,
+			"vis": true,
+			"color": "F8F8F8",
+			"bCoef": 0.1,
+			"trait": "line",
+			"x": 277.5
+		},
+		{
+			"v0": 115,
+			"v1": 116,
+			"curve": 180,
+			"vis": true,
+			"color": "F8F8F8",
+			"bCoef": 0.1,
+			"trait": "line",
+			"x": 277.5
+		}
+	],
+	"goals": [
+		{
+			"p0": [
+				-556.3,
+				-80
+			],
+			"p1": [
+				-556.3,
+				80
+			],
+			"team": "red"
+		},
+		{
+			"p0": [
+				556.3,
+				80
+			],
+			"p1": [
+				556.3,
+				-80
+			],
+			"team": "blue"
+		}
+	],
+	"discs": [
+		{
+			"radius": 5,
+			"pos": [
+				-550,
+				80
+			],
+			"color": "FF6666",
+			"trait": "goalPost",
+			"y": 80
+		},
+		{
+			"radius": 5,
+			"pos": [
+				-550,
+				-80
+			],
+			"color": "FF6666",
+			"trait": "goalPost",
+			"y": -80,
+			"x": -560
+		},
+		{
+			"radius": 5,
+			"pos": [
+				550,
+				80
+			],
+			"color": "479BD8",
+			"trait": "goalPost",
+			"y": 80
+		},
+		{
+			"radius": 5,
+			"pos": [
+				550,
+				-80
+			],
+			"color": "479BD8",
+			"trait": "goalPost",
+			"y": -80
+		},
+		{
+			"radius": 3,
+			"invMass": 0,
+			"pos": [
+				-550,
+				240
+			],
+			"color": "FFCC00",
+			"bCoef": 0.1,
+			"trait": "line"
+		},
+		{
+			"radius": 3,
+			"invMass": 0,
+			"pos": [
+				-550,
+				-240
+			],
+			"color": "FFCC00",
+			"bCoef": 0.1,
+			"trait": "line"
+		},
+		{
+			"radius": 3,
+			"invMass": 0,
+			"pos": [
+				550,
+				-240
+			],
+			"color": "FFCC00",
+			"bCoef": 0.1,
+			"trait": "line"
+		},
+		{
+			"radius": 3,
+			"invMass": 0,
+			"pos": [
+				550,
+				240
+			],
+			"color": "FFCC00",
+			"bCoef": 0.1,
+			"trait": "line"
+		}
+	],
+	"planes": [
+		{
+			"normal": [
+				0,
+				1
+			],
+			"dist": -240,
+			"bCoef": 1,
+			"trait": "ballArea",
+			"vis": false,
+			"curve": 0,
+			"_data": {
+				"extremes": {
+					"normal": [
+						0,
+						1
+					],
+					"dist": -240,
+					"canvas_rect": [
+						-350.0942371572802,
+						-145.87259881553342,
+						350.0942371572802,
+						145.87259881553342
+					],
+					"a": [
+						-350.0942371572802,
+						-240
+					],
+					"b": [
+						350.0942371572802,
+						-240
+					]
+				}
+			}
+		},
+		{
+			"normal": [
+				0,
+				-1
+			],
+			"dist": -240,
+			"bCoef": 1,
+			"trait": "ballArea",
+			"_data": {
+				"extremes": {
+					"normal": [
+						0,
+						-1
+					],
+					"dist": -240,
+					"canvas_rect": [
+						-350.0942371572802,
+						-145.87259881553342,
+						350.0942371572802,
+						145.87259881553342
+					],
+					"a": [
+						-350.0942371572802,
+						240
+					],
+					"b": [
+						350.0942371572802,
+						240
+					]
+				}
+			}
+		},
+		{
+			"normal": [
+				0,
+				1
+			],
+			"dist": -270,
+			"bCoef": 0.1,
+			"_data": {
+				"extremes": {
+					"normal": [
+						0,
+						1
+					],
+					"dist": -270,
+					"canvas_rect": [
+						-350.0942371572802,
+						-145.87259881553342,
+						350.0942371572802,
+						145.87259881553342
+					],
+					"a": [
+						-350.0942371572802,
+						-270
+					],
+					"b": [
+						350.0942371572802,
+						-270
+					]
+				}
+			}
+		},
+		{
+			"normal": [
+				0,
+				-1
+			],
+			"dist": -270,
+			"bCoef": 0.1,
+			"_data": {
+				"extremes": {
+					"normal": [
+						0,
+						-1
+					],
+					"dist": -270,
+					"canvas_rect": [
+						-350.0942371572802,
+						-145.87259881553342,
+						350.0942371572802,
+						145.87259881553342
+					],
+					"a": [
+						-350.0942371572802,
+						270
+					],
+					"b": [
+						350.0942371572802,
+						270
+					]
+				}
+			}
+		},
+		{
+			"normal": [
+				1,
+				0
+			],
+			"dist": -642,
+			"bCoef": 0.1,
+			"_data": {
+				"extremes": {
+					"normal": [
+						1,
+						0
+					],
+					"dist": -642,
+					"canvas_rect": [
+						-350.0942371572802,
+						-145.87259881553342,
+						350.0942371572802,
+						145.87259881553342
+					],
+					"a": [
+						-642,
+						-145.87259881553342
+					],
+					"b": [
+						-642,
+						145.87259881553342
+					]
+				}
+			}
+		},
+		{
+			"normal": [
+				-1,
+				0
+			],
+			"dist": -644,
+			"bCoef": 0.1,
+			"_data": {
+				"extremes": {
+					"normal": [
+						-1,
+						0
+					],
+					"dist": -644,
+					"canvas_rect": [
+						-350.0942371572802,
+						-145.87259881553342,
+						350.0942371572802,
+						145.87259881553342
+					],
+					"a": [
+						644,
+						-145.87259881553342
+					],
+					"b": [
+						644,
+						145.87259881553342
+					]
+				}
+			}
+		},
+		{
+			"normal": [
+				1,
+				0
+			],
+			"dist": -642,
+			"bCoef": 0.1,
+			"trait": "ballArea",
+			"vis": false,
+			"curve": 0,
+			"_data": {
+				"extremes": {
+					"normal": [
+						1,
+						0
+					],
+					"dist": -642,
+					"canvas_rect": [
+						-350.0942371572802,
+						-145.87259881553342,
+						350.0942371572802,
+						145.87259881553342
+					],
+					"a": [
+						-642,
+						-145.87259881553342
+					],
+					"b": [
+						-642,
+						145.87259881553342
+					]
+				}
+			}
+		},
+		{
+			"normal": [
+				-1,
+				0
+			],
+			"dist": -643,
+			"bCoef": 0.1,
+			"trait": "ballArea",
+			"vis": false,
+			"curve": 0,
+			"_data": {
+				"extremes": {
+					"normal": [
+						-1,
+						0
+					],
+					"dist": -643,
+					"canvas_rect": [
+						-350.0942371572802,
+						-145.87259881553342,
+						350.0942371572802,
+						145.87259881553342
+					],
+					"a": [
+						643,
+						-145.87259881553342
+					],
+					"b": [
+						643,
+						145.87259881553342
+					]
+				}
+			}
+		}
+	],
+	"traits": {
+		"ballArea": {
+			"vis": false,
+			"bCoef": 1,
+			"cMask": [
+				"ball"
+			]
+		},
+		"goalPost": {
+			"radius": 8,
+			"invMass": 0,
+			"bCoef": 0.5
+		},
+		"goalNet": {
+			"vis": true,
+			"bCoef": 0.1,
+			"cMask": [
+				"ball"
+			]
+		},
+		"line": {
+			"vis": true,
+			"bCoef": 0.1,
+			"cMask": [
+				""
+			]
+		},
+		"kickOffBarrier": {
+			"vis": false,
+			"bCoef": 0.1,
+			"cGroup": [
+				"redKO",
+				"blueKO"
+			],
+			"cMask": [
+				"red",
+				"blue"
+			]
+		}
+	},
+	"playerPhysics": {
+		"bCoef": 0,
+		"acceleration": 0.11,
+		"kickingAcceleration": 0.083,
+		"kickStrength": 4.5,
+		"radius": 15,
+		"invMass": 0.5,
+		"damping": 0.96,
+		"cGroup": [
+			"red",
+			"blue"
+		],
+		"gravity": [
+			0,
+			0
+		],
+		"kickingDamping": 0.96,
+		"kickback": 0
+	},
+	"ballPhysics": {
+		"radius": 6.2,
+		"bCoef": 0.4,
+		"invMass": 1.6,
+		"damping": 0.99,
+		"color": "FF9214",
+		"cMask": [
+			"all"
+		],
+		"gravity": [
+			0,
+			0
+		],
+		"cGroup": [
+			"ball"
+		]
+	},
+	"cameraWidth": 0,
+	"cameraHeight": 0,
+	"maxViewWidth": 0,
+	"cameraFollow": "ball",
+	"redSpawnPoints": [],
+	"blueSpawnPoints": [],
+	"canBeStored": false,
+	"kickOffReset": "partial",
+	"joints": []
+}`
+}
+
 /* Configurações principais da SALA */
 
 room.setScoreLimit(0);
@@ -957,7 +3251,7 @@ function helpCommand(player, message) {
 function uniformCommand (player,message) { 
     let msgArray = message.split(/ +/).splice(1)
     if (msgArray.length === 0 ){
-        let uniformString = "[PV] Clubes Sulamericanos :"
+        let uniformString = "[🌎] Clubes Sulamericanos :"
         for (const [key, value] of Object.entries(uniforms)){
             if (value.type === Uniform.CLUBSA) {
                 uniformString += `\n ${value.name}: !uniforme ${key}`
@@ -965,7 +3259,7 @@ function uniformCommand (player,message) {
         }
         uniformString += `\n`
         room.sendAnnouncement(uniformString, player.id, announcementColor, "bold", Notification.CHAT)
-        let uniformString2 = "[PV] Clubes Europeus"
+        let uniformString2 = "[🌍] Clubes Europeus :"
         for (const [key, value] of Object.entries(uniforms)) {
             if (value.type === Uniform.CLUBEU) {
                 uniformString2 += `\n ${value.name}: !uniforme ${key}`
@@ -973,7 +3267,7 @@ function uniformCommand (player,message) {
         }
         uniformString2 += `\n`
         room.sendAnnouncement(uniformString2, player.id, announcementColor, "bold", Notification.CHAT)
-        let uniformString3 = "[PV] Clubes Custom"
+        let uniformString3 = "[🌐] Clubes Custom :"
         for (const [key, value] of Object.entries(uniforms)){
             if (value.type === Uniform.CLUBCS){
                 uniformString3 += `\n ${value.name}: !uniforme ${key}`
@@ -981,9 +3275,9 @@ function uniformCommand (player,message) {
         }
         uniformString3 += `\n`
         room.sendAnnouncement(uniformString3, player.id, announcementColor, "bold", Notification.CHAT)
-        room.sendAnnouncement(`[☝️] Para escolher um uniforme para seu time digite '\'!uniforme <sigla do time>\'.`, player.id, welcomeColor, "bold", Notification.CHAT)
+        room.sendAnnouncement(`[☝️] Para escolher um uniforme para seu time digite '\'!uniforme <sigla do time>'\'.`, player.id, welcomeColor, "bold", Notification.CHAT)
     } else if (msgArray.length < 2){
-        room.sendAnnouncement(`[PV] Uso incorreto. Use '\'!uniforme <red/blue> + <sigla do time>\'.`, player.id, welcomeColor, "bold", Notification.CHAT);
+        room.sendAnnouncement(`[❌] Uso incorreto. Use '\'!uniforme <red/blue> + <sigla do time>\'.`, player.id, welcomeColor, "bold", Notification.CHAT);
         return;
     } else {
         let uniformName = getUniform(msgArray[1].toLowerCase())
@@ -992,17 +3286,17 @@ function uniformCommand (player,message) {
         let teamColor = msgArray[0].toLowerCase()
 
         if (!player.admin){
-            room.sendAnnouncement(`[PV] Apenas admins podem modificar os uniformes dos times.`, player.id, welcomeColor, "bold", Notification.CHAT);
+            room.sendAnnouncement(`[⚠️] Apenas admins podem modificar os uniformes dos times.`, player.id, welcomeColor, "bold", Notification.CHAT);
             return;
         }
 
         if (teamColor !== "red" && teamColor !== "blue"){
-            room.sendAnnouncement(`[PV] Uso incorreto. Use '\'!uniforme <red/blue> + <sigla do time>\'.`, player.id, welcomeColor, "bold", Notification.CHAT)
+            room.sendAnnouncement(`[❌] Uso incorreto. Use '\'!uniforme <red/blue> + <sigla do time>\'.`, player.id, welcomeColor, "bold", Notification.CHAT)
             return
         }
 
         if (!uniform) {
-            room.sendAnnouncement(`[PV] Esse uniforme não existe. Digite '!uniforme' para ver os disponíveis.`, player.id, welcomeColor, "bold", Notification.CHAT);
+            room.sendAnnouncement(`[⚠️] Esse uniforme não existe. Digite '!uniforme' para ver os disponíveis.`, player.id, welcomeColor, "bold", Notification.CHAT);
             return;
         }
 
@@ -1014,7 +3308,7 @@ function uniformCommand (player,message) {
             }
         }
 
-    room.sendAnnouncement(`[PV] O uniforme do \'${uniform.name}\' foi colocado no time ${targetTeam === 1 ? "RED" : "BLUE"}`, player.id, announcementColor, "bold", Notification.CHAT);
+    room.sendAnnouncement(`[📢] O uniforme do \'${uniform.name}\' foi colocado no time ${targetTeam === 1 ? "Red" : "Blue"}`, player.id, announcementColor, "bold", Notification.CHAT);
     room.setTeamColors(targetTeam, uniforms[uniformName].angle, uniforms[uniformName].textcolor, [uniforms[uniformName].color1, uniforms[uniformName].color2, uniforms[uniformName].color3])
 
         if (targetTeam == 1){
@@ -1034,11 +3328,11 @@ function reserveCommand(player){
     if (player.team === 1){
         if (!isHomeReserve){
             room.setTeamColors(player.team, uniforms[acronymHome].angle2, uniforms[acronymHome].textcolor2, [uniforms[acronymHome].color21, uniforms[acronymHome].color22, uniforms[acronymHome].color23])
-            room.sendAnnouncement(`[PV] Uniforme reserva do "${nameHome}" aplicado.`, player.id, announcementColor, "bold", Notification.CHAT);
+            room.sendAnnouncement(`[📢] O uniforme reserva do "${nameHome}" foi aplicado.`, player.id, announcementColor, "bold", Notification.CHAT);
             isHomeReserve = true
         } else {
             room.setTeamColors(player.team, uniforms[acronymHome].angle, uniforms[acronymHome].textcolor, [uniforms[acronymHome].color1, uniforms[acronymHome].color2, uniforms[acronymHome].color3]);
-            room.sendAnnouncement(`[PV] Uniforme principal do "${nameHome}" restaurado.`, player.id, announcementColor, "bold", Notification.CHAT);
+            room.sendAnnouncement(`[📢] O uniforme principal do "${nameHome}" foi restaurado.`, player.id, announcementColor, "bold", Notification.CHAT);
             isHomeReserve = false;
         }
     }
@@ -1120,22 +3414,46 @@ function leaveCommand(player, message){
 
 function roomCommand(player, message){
     let msgArray = message.split(/ +/).slice(1)
+
     if (!player.admin) {
-        room.sendAnnouncement(`Apenas administradores podem usar esse comando`, player.id, announcementColor, "bold", Notification.CHAT)
+        room.sendAnnouncement(`[❌] Apenas administradores podem usar esse comando`, player.id, welcomeColor, "bold", Notification.CHAT)
         return;
     }
-    if (msgArray.length < 1 ){
-        room.sendAnnouncement(`Uso correto: !sala nome`, player.id, announcementColor, "bold", Notification.CHAT)
+
+    if (msgArray.length === 0){
+        let RoomString = "[🏟️] Salas disponíveis: "
+        for(const [key] of Object.entries(mapas)) {
+            RoomString += `\n !sala ${key}`
+        }
+        RoomString += '\n'
+        room.sendAnnouncement(RoomString, player.id, welcomeColor, "bold", Notification.CHAT)
         return
+    }
+
+    if (room.getScores() !== null){
+        room.sendAnnouncement(`[🚫] Não é possível trocar o mapa durante uma partida em andamento.`, player.id, welcomeColor, "bold", Notification.CHAT);
+        return;
     }
 
     let nome = msgArray[0].toLowerCase()
 
+    if (!mapas[nome]) {
+        room.sendAnnouncement(`[❌] O mapa "${nome}" não existe.`, player.id, welcomeColor, "bold", Notification.CHAT)
+        return;
+    }
+
+    let MapaJSON = JSON.parse(mapas[nome])
+
+    room.setDefaultStadium("Classic");
+
     if (mapas[nome]){
-        room.setCustomStadium(mapas[nome])
-        room.sendAnnouncement(`O mapa foi trocado para ${mapas[nome].name} por ${player.id}`, null, announcementColor, "bold", Notification.CHAT)
+        setTimeout(() => {
+            room.setCustomStadium(mapas[nome])
+            mapaAtual = nome
+            room.sendAnnouncement(`[📣] O mapa foi trocado para ${MapaJSON.name} por ${player.name}`, null, welcomeColor, "bold", Notification.CHAT)
+        }, 100);
     } else {
-        room.sendAnnouncement(`Mapa ${nome} não encontrada.`, player.id, announcementColor, "bold", Notification.CHAT)
+        room.sendAnnouncement(`[❌] O mapa "${nome}" não existe.`, player.id, welcomeColor, "bold", Notification.CHAT)
     }
 }
 
