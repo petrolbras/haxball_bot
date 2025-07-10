@@ -35,6 +35,10 @@ Se você está interessado em usar este bot ->
 4. Aperte enter e complete o captcha
 5. Aperte botão direito no link que surgirá e clique em "Abrir link em uma nova guia"
 
+<p align="center">
+  <img src="./haxball-gradient-line.png" width="100%">
+</p>
+
 ## ➤ Como ser administrador na sala?
 > Para logar como adm, você deve usar o comando **`!admin (senha)`**
 
