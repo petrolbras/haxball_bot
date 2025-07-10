@@ -23,6 +23,10 @@ Se você está interessado em usar este bot ->
 
 - A sala funciona com a integração entre a API do haxball 🔗 (https://www.haxball.com/headless).
 
+<p align="center">
+  <img src="./haxball-gradient-line.png" width="100%">
+</p>
+
 ## ➤ 🔎 Como integrar o bot?
 
 1. Abra a página da API do haxball -> 🔗 (https://www.haxball.com/headless).
@@ -77,6 +81,10 @@ Use CTRL + f no código e pesquise por **`adminPassword`**
 let adminPassword = example
 
 ```
+
+<p align="center">
+  <img src="./haxball-gradient-line.png" width="100%">
+</p>
 
 ## ➤ 🌍 Linguas atuais
 
