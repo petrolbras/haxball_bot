@@ -3,8 +3,6 @@
 
 Bot headless personalizável para organização de partidas no Haxball. Oferece comandos administrativos e funcionais para controle de mapas, times, uniformes e reservas, com foco em torneios, ligas e salas públicas.
 
-<hr style="height: 4px; border: none; background: linear-gradient(to right, #8B0000, #FF0000, #FFD700, #1E90FF, #B0C4DE);" />
-
 ## ➤ ⚙️ Funcionalidades principais
 ---
 
@@ -17,16 +15,12 @@ Bot headless personalizável para organização de partidas no Haxball. Oferece 
 - Delay automático para correção de bugs do setCustomStadium
 - Controle de fluxo e proteção contra comandos mal utilizados
 
-<hr style="height: 4px; border: none; background: linear-gradient(to right, #8B0000, #FF0000, #FFD700, #1E90FF, #B0C4DE);" />
-
 ## ➤ 📦 Requisitos
 ---
 
 Se você está interessado em usar este bot -> 
 
 - A sala funciona com a integração entre a API do haxball 🔗 (https://www.haxball.com/headless).
-
-<hr style="height: 4px; border: none; background: linear-gradient(to right, #8B0000, #FF0000, #FFD700, #1E90FF, #B0C4DE);" />
 
 ## ➤ 🔎 Como integrar o bot?
 --- 
@@ -36,8 +30,6 @@ Se você está interessado em usar este bot ->
 3. Copie o código de **`main.js`** e cole no console
 4. Aperte enter e complete o captcha
 5. Aperte botão direito no link que surgirá e clique em "Abrir link em uma nova guia"
-
-<hr style="height: 4px; border: none; background: linear-gradient(to right, #8B0000, #FF0000, #FFD700, #1E90FF, #B0C4DE);" />
 
 ## ➤ Como ser administrador na sala?
 > Para logar como adm, você deve usar o comando **`!admin (senha)`**
@@ -85,8 +77,6 @@ Use CTRL + f no código e pesquise por **`adminPassword`**
 let adminPassword = example
 
 ```
-
-<hr style="height: 4px; border: none; background: linear-gradient(to right, #8B0000, #FF0000, #FFD700, #1E90FF, #B0C4DE);" />
 
 ## ➤ 🌍 Linguas atuais
 ---
