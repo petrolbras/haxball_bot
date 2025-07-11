@@ -90,9 +90,13 @@ let adminPassword = example
   <img src="./haxball-gradient-line.png" width="100%">
 </p>
 
-## ➤ 🌍 Linguas atuais
+# ➤ 🌍 Linguas atuais
 
 - Português do Brasil
+
+<p align="center">
+  <img src="./haxball-gradient-line.png" width="100%">
+</p>
 
 ## ➤ 🚀 Futuro
 
