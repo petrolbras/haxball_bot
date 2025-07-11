@@ -2,22 +2,22 @@
 
 <p align="center"> Bot headless personalizável para organização de partidas no Haxball. Oferece comandos administrativos e funcionais para controle de mapas, times, uniformes e reservas, com foco em torneios, ligas e salas públicas. </p>
 
-## ➤ ⚙️ Funcionalidades principais
+## ➤ ⚙️ Funcionalidades principais: 
 
-- `!sala <nome>` – troca de mapa customizado
-- `!time <número> jogador1, jogador2` – distribui jogadores em times
-- `!uniforme <time>` – aplica uniformes estilizados
-- `!reserva <time>` – troca o kit para reserva
-- Verificação automática de permissões
-- Bloqueio de troca de mapa durante partidas ativas
-- Delay automático para correção de bugs do setCustomStadium
-- Controle de fluxo e proteção contra comandos mal utilizados
+- `!sala <nome>` – troca de mapa customizado.
+- `!time <número> jogador1, jogador2` – distribui jogadores em times.
+- `!uniforme <time>` – aplica uniformes estilizados.
+- `!reserva <time>` – troca o kit para reserva.
+- Verificação automática de permissões.
+- Bloqueio de troca de mapa durante partidas ativas.
+- Delay automático para correção de bugs do setCustomStadium.
+- Controle de fluxo e proteção contra comandos mal utilizados.
 
 <p align="center">
   <img src="./haxball-gradient-line.png" width="100%">
 </p>
 
-## ➤ 📦 Requisitos
+## ➤ 📦 Requisitos: 
 
 Se você está interessado em usar este bot -> 
 
@@ -27,22 +27,22 @@ Se você está interessado em usar este bot ->
   <img src="./haxball-gradient-line.png" width="100%">
 </p>
 
-## ➤ 🔎 Como integrar o bot?
+## ➤ 🔎 Como integrar o bot? 
 
 1. Abra a página da API do haxball -> 🔗 (https://www.haxball.com/headless).
-2. Abra as devtools apertando F12 e selecione o console
-3. Copie o código de **`main.js`** e cole no console
-4. Aperte enter e complete o captcha
-5. Aperte botão direito no link que surgirá e clique em "Abrir link em uma nova guia"
+2. Abra as devtools apertando F12 e selecione o console.
+3. Copie o código de **`main.js`** e cole no console.
+4. Aperte enter e complete o captcha.
+5. Aperte botão direito no link que surgirá e clique em "Abrir link em uma nova guia".
 
 <p align="center">
   <img src="./haxball-gradient-line.png" width="100%">
 </p>
 
-## ➤ Como ser administrador na sala?
-> Para logar como adm, você deve usar o comando **`!admin (senha)`**
+## ➤ Como ser administrador na sala? 
+> Para logar como adm, você deve usar o comando **`!admin (senha)`**.
 
-### Edite o comando de admin no código
+### Edite o comando de admin no código.
 
 Tanto a senha quanto os comandos de admin são editáveis, procure por "adminCommand" usando CTRL + F no código.
 
@@ -76,9 +76,9 @@ function adminCommand(player, message) {
 }
 ```
 
-### Edite a senha
+### Edite a senha.
 
-Use CTRL + f no código e pesquise por **`adminPassword`**
+Use CTRL + f no código e pesquise por **`adminPassword`**.
 
 ```js 
 
@@ -90,28 +90,28 @@ let adminPassword = example
   <img src="./haxball-gradient-line.png" width="100%">
 </p>
 
-# ➤ 🌍 Linguas atuais
+# ➤ 🌍 Linguas atuais.
 
-- Português do Brasil
+- Português do Brasil.
 
 <p align="center">
   <img src="./haxball-gradient-line.png" width="100%">
 </p>
 
-## ➤ 🚀 Futuro
+## ➤ 🚀 Futuro! 
 
 Novas funcionalidades serão adicionadas com o passar do tempo! Como:
 
-- Linkagem do bot com servidores no Discord
-- Gravação de partidas e envio no Discord
-- Features de coontador de jogos, jogadores com mais assistências, gols, vitórias, campeonatos etc
-- Organização de torneios
+- Linkagem do bot com servidores no discord.
+- Gravação de partidas e envio no discord.
+- Features de coontador de jogos, jogadores com mais assistências, gols, vitórias, campeonatos etc.
+- Organização de torneios.
 E muito mais!
 
 <p align="center">
   <img src="./haxball-gradient-line.png" width="100%">
 </p>
 
-## 📩 Feedback
+## 📩 Feedback.
 
 - Se você achou quaisquer bugs, por favor abra uma issue nesse repositório com detalhes sobre!
