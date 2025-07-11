@@ -28,7 +28,9 @@ let players;
 let numberEachTeam;
 let isHomeReserve = false;
 let isGuestReserve = false;
+let isGameRunning = false
 let afkPlayers = new Set();
+let teamChangeCooldown = new Set()
 let mapaAtual = false
 
 /* Cores */
@@ -3370,6 +3372,11 @@ room.onGameStart = function () {
 	Gposs = 0;
     isHomeReserve = false;
     isGuestReserve = false;
+	isGameRunning = true;
+}
+
+room.onGameStop = function(){
+	isGameRunning = false
 }
 
 room.onPlayerJoin = function(player) {
@@ -3453,14 +3460,22 @@ room.onTeamGoal = function (team) {
 }
 
 room.onPlayerTeamChange = function (player) {
+	if (teamChangeCooldown.has(player.id)) return
+
     if(player.id == 0) {
         room.setPlayerTeam(player.id, 0);
         room.sendAnnouncement(`[⚠️] Você não pode colocar o bot para jogar!`, null , welcomeColor, "bold", Notification.CHAT);
     }
 
     if(afkPlayers.has(player.id)) {
+		teamChangeCooldown.add(player.id)
         room.setPlayerTeam(player.id, 0);
-        room.sendAnnouncement(`[⚠️] O jogador "${player.name}" está AFK`, null , welcomeColor, "bold", Notification.CHAT);
+        room.sendAnnouncement(`[⚠️] O jogador "${player.name}" está AFK`, player.id , welcomeColor, "bold", Notification.CHAT);
+
+		setTimeout(() => {
+			teamChangeCooldown.delete(player.id)
+		}, 100)
+		return
     }
 
 	updateTeams();
@@ -3670,13 +3685,19 @@ function helpCommand(player, message) {
     else if (msgArray.length >= 1) {
 		let commandName = getCommand(msgArray[0].toLowerCase());
 		if (commandName !== false && commands[commandName].desc !== false) room.sendAnnouncement(`[PV] Comando \'${commandName}\' :\n${commands[commandName].desc}`, player.id, announcementColor, "bold", Notification.CHAT);
-		else room.sendAnnouncement(`[PV] Esse comando não existe. Para olhar a lista de comandos digite \'!ajuda\'`, player.id, announcementColor, "bold", Notification.CHAT);
+		else room.sendAnnouncement(`[❌] Esse comando não existe. Para olhar a lista de comandos digite \'!ajuda\'`, player.id, commandsColor, "bold", Notification.CHAT);
 	}
 }
 
 function uniformCommand (player,message) { 
     let msgArray = message.split(/ +/).splice(1)
     if (msgArray.length === 0 ){
+
+		if (!player.admin){
+            room.sendAnnouncement(`[⚠️] Apenas admins podem modificar os uniformes dos times.`, player.id, welcomeColor, "bold", Notification.CHAT);
+            return;
+        }
+
         let uniformString = "[🌎] Clubes Sulamericanos :"
         for (const [key, value] of Object.entries(uniforms)){
             if (value.type === Uniform.CLUBSA) {
@@ -3701,9 +3722,9 @@ function uniformCommand (player,message) {
         }
         uniformString3 += `\n`
         room.sendAnnouncement(uniformString3, player.id, announcementColor, "bold", Notification.CHAT)
-        room.sendAnnouncement(`[☝️] Para escolher um uniforme para seu time digite '\'!uniforme <sigla do time>'\'.`, player.id, welcomeColor, "bold", Notification.CHAT)
+        room.sendAnnouncement(`[☝️] Para escolher um uniforme para seu time digite "!uniforme <red/blue> + <sigla do time>".`, player.id, welcomeColor, "bold", Notification.CHAT)
     } else if (msgArray.length < 2){
-        room.sendAnnouncement(`[❌] Uso incorreto. Use '\'!uniforme <red/blue> + <sigla do time>\'.`, player.id, welcomeColor, "bold", Notification.CHAT);
+        room.sendAnnouncement(`[❌] Uso incorreto. Use "!uniforme <red/blue> + <sigla do time>".`, player.id, welcomeColor, "bold", Notification.CHAT);
         return;
     } else {
         let uniformName = getUniform(msgArray[1].toLowerCase())
@@ -3715,6 +3736,11 @@ function uniformCommand (player,message) {
             room.sendAnnouncement(`[⚠️] Apenas admins podem modificar os uniformes dos times.`, player.id, welcomeColor, "bold", Notification.CHAT);
             return;
         }
+
+		if (!isGameRunning) {
+			room.sendAnnouncement(`[❌] O jogo ainda não começou. Não é possível colocar uniformes agora.`, player.id, welcomeColor, "bold", Notification.CHAT);
+			return;
+		}
 
         if (teamColor !== "red" && teamColor !== "blue"){
             room.sendAnnouncement(`[❌] Uso incorreto. Use '\'!uniforme <red/blue> + <sigla do time>\'.`, player.id, welcomeColor, "bold", Notification.CHAT)
@@ -3734,7 +3760,7 @@ function uniformCommand (player,message) {
             }
         }
 
-    room.sendAnnouncement(`[📢] O uniforme do \'${uniform.name}\' foi colocado no time ${targetTeam === 1 ? "Red" : "Blue"}`, player.id, announcementColor, "bold", Notification.CHAT);
+    room.sendAnnouncement(`[📢] O uniforme do \'${uniform.name}\' foi colocado no time ${targetTeam === 1 ? "Red" : "Blue"}`, player.id, welcomeColor, "bold", Notification.CHAT);
     room.setTeamColors(targetTeam, uniforms[uniformName].angle, uniforms[uniformName].textcolor, [uniforms[uniformName].color1, uniforms[uniformName].color2, uniforms[uniformName].color3])
 
         if (targetTeam == 1){
@@ -3750,31 +3776,70 @@ function uniformCommand (player,message) {
 
 }
 
-function reserveCommand(player){
-    if (player.team === 1){
-        if (!isHomeReserve){
-            room.setTeamColors(player.team, uniforms[acronymHome].angle2, uniforms[acronymHome].textcolor2, [uniforms[acronymHome].color21, uniforms[acronymHome].color22, uniforms[acronymHome].color23])
-            room.sendAnnouncement(`[📢] O uniforme reserva do "${nameHome}" foi aplicado.`, player.id, announcementColor, "bold", Notification.CHAT);
-            isHomeReserve = true
-        } else {
-            room.setTeamColors(player.team, uniforms[acronymHome].angle, uniforms[acronymHome].textcolor, [uniforms[acronymHome].color1, uniforms[acronymHome].color2, uniforms[acronymHome].color3]);
-            room.sendAnnouncement(`[📢] O uniforme principal do "${nameHome}" foi restaurado.`, player.id, announcementColor, "bold", Notification.CHAT);
-            isHomeReserve = false;
-        }
-    }
+function reserveCommand(player, message){
+	let msgArray = message.split(/ +/).splice(1)
 
-    if (player.team === 2){
-        if (!isGuestReserve) {
-            room.setTeamColors(player.team, uniforms[acronymGuest].angle2, uniforms[acronymGuest].textcolor2, [uniforms[acronymGuest].color21, uniforms[acronymGuest].color22, uniforms[acronymGuest].color23])
-            room.sendAnnouncement(`[PV] Uniforme reserva do '${nameGuest}' aplicado.`, player.id, announcementColor, "bold", Notification.CHAT);
-            isGuestReserve = true
-        } else {
-            room.setTeamColors(player.team, uniforms[acronymGuest].angle, uniforms[acronymGuest].textcolor, [uniforms[acronymGuest].color1, uniforms[acronymGuest].color2, uniforms[acronymGuest].color3]);
-            room.sendAnnouncement(`[PV] Uniforme principal do '${nameGuest}' restaurado.`, player.id, announcementColor, "bold", Notification.CHAT);
-            isGuestReserve = false;
-        }
-    }
-}
+	if (msgArray.length !== 2) {
+		room.sendAnnouncement(`[❌] Uso incorreto. Use "!reserva <red/blue> + <sigla do time>".`, player.id, welcomeColor, "bold", Notification.CHAT);
+		return;
+	}
+
+	if (!player.admin){
+		room.sendAnnouncement(`[⚠️] Apenas admins podem modificar os uniformes dos times.`, player.id, welcomeColor, "bold", Notification.CHAT);
+		return;
+	}
+
+	if (!isGameRunning) {
+		room.sendAnnouncement(`[❌] O jogo ainda não começou. Não é possível mudar uniformes agora.`, player.id, welcomeColor, "bold", Notification.CHAT);
+		return;
+	}
+
+	let teamColor = msgArray[0].toLowerCase()
+	if (teamColor !== "red" && teamColor !== "blue"){
+		room.sendAnnouncement(`[❌] Uso incorreto. Use "!reserva <red/blue>".`, player.id, welcomeColor, "bold", Notification.CHAT)
+        return;
+	}
+
+	let uniformName = getUniform(msgArray[1].toLowerCase())
+ 	let uniform = uniforms[uniformName];
+	let targetTeam = (teamColor === "red") ? 1 : 2
+
+	if (!uniform) {
+		room.sendAnnouncement(`[⚠️] Esse uniforme não existe. Digite '!uniforme' para ver os disponíveis.`, player.id, welcomeColor, "bold", Notification.CHAT);
+		return;
+	}
+
+	if (targetTeam === 1 && acronymHome !== uniformName) {
+		room.sendAnnouncement(`[❌] O uniforme principal do time Red não foi definido. Use "!uniforme red <sigla>" primeiro.`, player.id, welcomeColor, "bold", Notification.CHAT);
+		return;
+	}
+	if (targetTeam === 2 && acronymGuest !== uniformName) {
+		room.sendAnnouncement(`[❌] O uniforme principal do time Blue não foi definido. Use "!uniforme blue <sigla>" primeiro.`, player.id, welcomeColor, "bold", Notification.CHAT);
+		return;
+	}
+
+	if (targetTeam == 1){
+		if (!isHomeReserve){
+			room.setTeamColors(targetTeam, uniforms[uniformName].angle2, uniforms[uniformName].textcolor2, [uniforms[uniformName].color21, uniforms[uniformName].color22, uniforms[uniformName].color23])
+			room.sendAnnouncement(`[📢] O uniforme reserva do "${nameHome}" foi aplicado.`, player.id, welcomeColor, "bold", Notification.CHAT);
+			isHomeReserve = true
+		} else {
+			room.setTeamColors(targetTeam, uniforms[uniformName].angle, uniforms[uniformName].textcolor, [uniforms[uniformName].color1, uniforms[uniformName].color2, uniforms[uniformName].color3]);
+			room.sendAnnouncement(`[📢] O uniforme principal do "${nameHome}" foi restaurado.`, player.id, welcomeColor, "bold", Notification.CHAT);
+			isHomeReserve = false;
+		}
+	} else if (targetTeam == 2){
+		if (!isGuestReserve) {
+			room.setTeamColors(targetTeam, uniforms[uniformName].angle2, uniforms[uniformName].textcolor2, [uniforms[uniformName].color21, uniforms[uniformName].color22, uniforms[uniformName].color23])
+			room.sendAnnouncement(`[📢] Uniforme reserva do '${nameGuest}' aplicado.`, player.id, welcomeColor, "bold", Notification.CHAT);
+			isGuestReserve = true
+		} else {
+			room.setTeamColors(targetTeam, uniforms[uniformName].angle, uniforms[uniformName].textcolor, [uniforms[uniformName].color1, uniforms[uniformName].color2, uniforms[uniformName].color3]);
+			room.sendAnnouncement(`[📢] Uniforme principal do '${nameGuest}' restaurado.`, player.id, welcomeColorr, "bold", Notification.CHAT);
+			isGuestReserve = false;
+		}
+	}
+}	
 
 function restartCommand(player, message){
     if (player.admin) {
@@ -3946,7 +4011,7 @@ function afkCommand(player, message) {
     const isAFK = afkPlayers.has(player.id)
 
     if (player.team === 1 || player.team === 2) {
-        room.sendAnnouncement(`❌ [PV] Você não pode ativar AFK enquanto está em jogo.`, player.id, welcomeColor, "bold", Notification.CHAT);
+        room.sendAnnouncement(`[❌] Você não pode ativar AFK enquanto está em jogo.`, player.id, welcomeColor, "bold", Notification.CHAT);
         return;
     }
 
