@@ -24,7 +24,7 @@ Se você está interessado em usar este bot ->
 - A sala funciona com a integração entre a API do haxball 🔗 (https://www.haxball.com/headless).
 
 <p align="center">
-  <img src="./haxball-gradient-line.png" width="100%">
+  <img src="assets/haxball-gradient-line.png" width="100%">
 </p>
 
 ## ➤ 🔎 Como integrar o bot? 
@@ -36,7 +36,7 @@ Se você está interessado em usar este bot ->
 5. Aperte botão direito no link que surgirá e clique em "Abrir link em uma nova guia".
 
 <p align="center">
-  <img src="./haxball-gradient-line.png" width="100%">
+  <img src="assets/haxball-gradient-line.png" width="100%">
 </p>
 
 ## ➤ Como ser administrador na sala? 
@@ -87,7 +87,7 @@ let adminPassword = example
 ```
 
 <p align="center">
-  <img src="./haxball-gradient-line.png" width="100%">
+  <img src="assets/haxball-gradient-line.png" width="100%">
 </p>
 
 # ➤ 🌍 Linguas atuais.
@@ -95,7 +95,7 @@ let adminPassword = example
 - Português do Brasil.
 
 <p align="center">
-  <img src="./haxball-gradient-line.png" width="100%">
+  <img src="assets/haxball-gradient-line.png" width="100%">
 </p>
 
 ## ➤ 🚀 Futuro! 
@@ -109,7 +109,7 @@ Novas funcionalidades serão adicionadas com o passar do tempo! Como:
 E muito mais!
 
 <p align="center">
-  <img src="./haxball-gradient-line.png" width="100%">
+  <img src="assets/haxball-gradient-line.png" width="100%">
 </p>
 
 ## 📩 Feedback.
