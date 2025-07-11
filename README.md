@@ -94,6 +94,20 @@ let adminPassword = example
 
 - Português do Brasil
 
-### 📩 Feedback
+## ➤ 🚀 Futuro
+
+Novas funcionalidades serão adicionadas com o passar do tempo! Como:
+
+- Linkagem do bot com servidores no Discord
+- Gravação de partidas e envio no Discord
+- Features de coontador de jogos, jogadores com mais assistências, gols, vitórias, campeonatos etc
+- Organização de torneios
+E muito mais!
+
+<p align="center">
+  <img src="./haxball-gradient-line.png" width="100%">
+</p>
+
+## 📩 Feedback
 
 - Se você achou quaisquer bugs, por favor abra uma issue nesse repositório com detalhes sobre!
