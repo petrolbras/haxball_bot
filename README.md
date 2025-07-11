@@ -14,7 +14,7 @@
 - Controle de fluxo e proteção contra comandos mal utilizados.
 
 <p align="center">
-  <img src="./haxball-gradient-line.png" width="100%">
+  <img src="assets/haxball-gradient-line.png" width="100%">
 </p>
 
 ## ➤ 📦 Requisitos: 
