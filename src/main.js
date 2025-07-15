@@ -35,7 +35,6 @@ let mapaAtual = false
 
 /* Cores */
 
-let announcementColor = 0xE20007;
 let welcomeColor = 0x47A2E7;
 let commandsColor = 0xE1BB32;
 
@@ -54,6 +53,7 @@ let goalsHome = [];
 let goalsGuest = [];
 let Hposs;
 let Gposs;
+let savedTeams = [];
 
 /* Lista de comandos */
 
@@ -88,6 +88,12 @@ const commands = {
         "desc": `Este comando define os times da sala.`,
         "function": teamCommand,
     },
+	"restaurarTimes": {
+		"similar": [],
+		"roles": Role.ADMIN,
+		"desc": `Este comando redefine os times criados`,
+		"function": restoreCommand,
+	},
     "restart": {
         "similar": ['rr', 'res'],
         "roles": Role.ADMIN,
@@ -3360,12 +3366,12 @@ room.setTeamsLock(true);
 /* Funções Primárias */
 
 room.onGameStart = function () {
-	room.sendAnnouncement(centerText(`🥅🥅 PARTIDA INICIANDO 🥅🥅`), null, announcementColor, "bold", Notification.CHAT);
-	room.sendAnnouncement(centerText(`${emojiHome} ${nameHome} X ${nameGuest} ${emojiGuest}`), null, announcementColor, "bold", 0);
+	room.sendAnnouncement(centerText(`🥅🥅 PARTIDA INICIANDO 🥅🥅`), null, welcomeColor, "bold", Notification.CHAT);
+	room.sendAnnouncement(centerText(`${emojiHome} ${nameHome} X ${nameGuest} ${emojiGuest}`), null, welcomeColor, "bold", 0);
 
 	if (undefeatedScore !== 0) {
-		room.sendAnnouncement(centerText(`     📢 ${nameHome} está invicto 📢`), null, announcementColor, "bold", 0);
-		room.sendAnnouncement(centerText(`     📢 Sequência de ${undefeatedScore} jogo(s) 📢`), null, announcementColor, "bold", 0);
+		room.sendAnnouncement(centerText(`     📢 ${nameHome} está invicto 📢`), null, welcomeColor, "bold", 0);
+		room.sendAnnouncement(centerText(`     📢 Sequência de ${undefeatedScore} jogo(s) 📢`), null, welcomeColor, "bold", 0);
 	}
 
 	Hposs = 0;
@@ -3423,15 +3429,15 @@ room.onTeamGoal = function (team) {
     const goalTime = getTime()
     const scores = room.getScores()
     if (lastPlayerKick.team === team) {
-		room.sendAnnouncement(``, null, announcementColor, "bold", Notification.CHAT);
-		room.sendAnnouncement(centerText(`TOCA A MÚSICAAA, É GOOOOOL!!!`), null, announcementColor, "bold", 0);
-		room.sendAnnouncement(centerText(`⚽ Autor: ${lastPlayerKick.name} ⚽`), null, announcementColor, "bold", 0);
-		room.sendAnnouncement(centerText(`Velocidade do Chute: ${ballSpeed.toFixed()}km/h`), null, announcementColor, "bold", 0);
+		room.sendAnnouncement(``, null, welcomeColor, "bold", Notification.CHAT);
+		room.sendAnnouncement(centerText(`TOCA A MÚSICAAA, É GOOOOOL!!!`), null, welcomeColor, "bold", 0);
+		room.sendAnnouncement(centerText(`⚽ Autor: ${lastPlayerKick.name} ⚽`), null, welcomeColor, "bold", 0);
+		room.sendAnnouncement(centerText(`Velocidade do Chute: ${ballSpeed.toFixed()}km/h`), null, welcomeColor, "bold", 0);
         room.setPlayerAvatar(lastPlayerKick.id, '⚽');
 		setTimeout(function () { room.setPlayerAvatar(lastPlayerKick.id,); }, 2400);
 
 		if (penultPlayerKick.team === team) {
-			room.sendAnnouncement(centerText(`👟 Assistência: ${penultPlayerKick.name}👟`), null, announcementColor, "bold", 0);
+			room.sendAnnouncement(centerText(`👟 Assistência: ${penultPlayerKick.name}👟`), null, welcomeColor, "bold", 0);
 			room.setPlayerAvatar(penultPlayerKick.id, '👟');
 			setTimeout(function () { room.setPlayerAvatar(penultPlayerKick.id,); }, 2400);
 		}
@@ -3443,10 +3449,10 @@ room.onTeamGoal = function (team) {
 		}
 
 	} else {
-		room.sendAnnouncement(``, null, announcementColor, "bold", Notification.CHAT);
-		room.sendAnnouncement(centerText(`🤦‍♂️ Boa seu merda! Gol Contra! 🤦‍♂️`), null, announcementColor, "bold", 0);
-		room.sendAnnouncement(centerText(`🤡 Autor: ${lastPlayerKick.name} 🤡`), null, announcementColor, "bold", 0);
-		room.sendAnnouncement(centerText(`Velocidade do Chute: ${ballSpeed.toFixed()}km/h`), null, announcementColor, "bold", 0);
+		room.sendAnnouncement(``, null, welcomeColor, "bold", Notification.CHAT);
+		room.sendAnnouncement(centerText(`🤦‍♂️ Boa seu merda! Gol Contra! 🤦‍♂️`), null, welcomeColor, "bold", 0);
+		room.sendAnnouncement(centerText(`🤡 Autor: ${lastPlayerKick.name} 🤡`), null, welcomeColor, "bold", 0);
+		room.sendAnnouncement(centerText(`Velocidade do Chute: ${ballSpeed.toFixed()}km/h`), null, welcomeColor, "bold", 0);
 		room.setPlayerAvatar(lastPlayerKick.id, '🤡');
 		setTimeout(function () { room.setPlayerAvatar(lastPlayerKick.id,); }, 2400);
 
@@ -3456,7 +3462,7 @@ room.onTeamGoal = function (team) {
 			goalsGuest.push(`${lastPlayerKick.name} (C)  ${goalTime}`);
 		}
 	}
-	room.sendAnnouncement(centerText(`${emojiHome} ${nameHome} ${scores.red} - ${scores.blue} ${nameGuest} ${emojiGuest}`), null, announcementColor, "bold", 0);
+	room.sendAnnouncement(centerText(`${emojiHome} ${nameHome} ${scores.red} - ${scores.blue} ${nameGuest} ${emojiGuest}`), null, welcomeColor, "bold", 0);
 }
 
 room.onPlayerTeamChange = function (player) {
@@ -3465,6 +3471,7 @@ room.onPlayerTeamChange = function (player) {
     if(player.id == 0) {
         room.setPlayerTeam(player.id, 0);
         room.sendAnnouncement(`[⚠️] Você não pode colocar o bot para jogar!`, null , welcomeColor, "bold", Notification.CHAT);
+		return
     }
 
     if(afkPlayers.has(player.id)) {
@@ -3487,12 +3494,12 @@ room.onTeamVictory = function () {
 	Hposs = Hposs / (Hposs + Gposs);
 	Gposs = 1 - Hposs;
 
-	room.sendAnnouncement(centerText(`🏆 FIM DE PARTIDA 🏆`), null, announcementColor, "bold", Notification.CHAT);
+	room.sendAnnouncement(centerText(`🏆 FIM DE PARTIDA 🏆`), null, welcomeColor, "bold", Notification.CHAT);
 	room.sendAnnouncement(centerText(`${emojiHome} ${nameHome} ${scores.red} - ${scores.blue} ${nameGuest} ${emojiGuest}`), null, 0x0000FF, "bold", 0);
-	room.sendAnnouncement(centerText(`${emojiHome} ` + (Hposs * 100).toPrecision(2).toString() + `%` + `  Posse de bola  ` + (Gposs * 100).toPrecision(2).toString() + `% ${emojiGuest}`), null, announcementColor, "bold", 0);
+	room.sendAnnouncement(centerText(`${emojiHome} ` + (Hposs * 100).toPrecision(2).toString() + `%` + `  Posse de bola  ` + (Gposs * 100).toPrecision(2).toString() + `% ${emojiGuest}`), null, welcomeColor, "bold", 0);
 
 	for (let i = 0; i < 3; i++) {
-		room.sendAnnouncement(docketFormat(goalsHome[i], goalsGuest[i]), null, announcementColor, "bold", 0);
+		room.sendAnnouncement(docketFormat(goalsHome[i], goalsGuest[i]), null, welcomeColor, "bold", 0);
 	}
 
 	if (scores.red > scores.blue) {
@@ -3684,7 +3691,7 @@ function helpCommand(player, message) {
     }
     else if (msgArray.length >= 1) {
 		let commandName = getCommand(msgArray[0].toLowerCase());
-		if (commandName !== false && commands[commandName].desc !== false) room.sendAnnouncement(`[PV] Comando \'${commandName}\' :\n${commands[commandName].desc}`, player.id, announcementColor, "bold", Notification.CHAT);
+		if (commandName !== false && commands[commandName].desc !== false) room.sendAnnouncement(`[PV] Comando \'${commandName}\' :\n${commands[commandName].desc}`, player.id, welcomeColor, "bold", Notification.CHAT);
 		else room.sendAnnouncement(`[❌] Esse comando não existe. Para olhar a lista de comandos digite \'!ajuda\'`, player.id, commandsColor, "bold", Notification.CHAT);
 	}
 }
@@ -3705,7 +3712,7 @@ function uniformCommand (player,message) {
             }
         }
         uniformString += `\n`
-        room.sendAnnouncement(uniformString, player.id, announcementColor, "bold", Notification.CHAT)
+        room.sendAnnouncement(uniformString, player.id, welcomeColor, "bold", Notification.CHAT)
         let uniformString2 = "[🌍] Clubes Europeus :"
         for (const [key, value] of Object.entries(uniforms)) {
             if (value.type === Uniform.CLUBEU) {
@@ -3713,7 +3720,7 @@ function uniformCommand (player,message) {
             }
         }
         uniformString2 += `\n`
-        room.sendAnnouncement(uniformString2, player.id, announcementColor, "bold", Notification.CHAT)
+        room.sendAnnouncement(uniformString2, player.id, welcomeColor, "bold", Notification.CHAT)
         let uniformString3 = "[🌐] Clubes Custom :"
         for (const [key, value] of Object.entries(uniforms)){
             if (value.type === Uniform.CLUBCS){
@@ -3721,7 +3728,7 @@ function uniformCommand (player,message) {
             }
         }
         uniformString3 += `\n`
-        room.sendAnnouncement(uniformString3, player.id, announcementColor, "bold", Notification.CHAT)
+        room.sendAnnouncement(uniformString3, player.id, welcomeColor, "bold", Notification.CHAT)
         room.sendAnnouncement(`[☝️] Para escolher um uniforme para seu time digite "!uniforme <red/blue> + <sigla do time>".`, player.id, welcomeColor, "bold", Notification.CHAT)
     } else if (msgArray.length < 2){
         room.sendAnnouncement(`[❌] Uso incorreto. Use "!uniforme <red/blue> + <sigla do time>".`, player.id, welcomeColor, "bold", Notification.CHAT);
@@ -3835,7 +3842,7 @@ function reserveCommand(player, message){
 			isGuestReserve = true
 		} else {
 			room.setTeamColors(targetTeam, uniforms[uniformName].angle, uniforms[uniformName].textcolor, [uniforms[uniformName].color1, uniforms[uniformName].color2, uniforms[uniformName].color3]);
-			room.sendAnnouncement(`[📢] Uniforme principal do '${nameGuest}' restaurado.`, player.id, welcomeColorr, "bold", Notification.CHAT);
+			room.sendAnnouncement(`[📢] Uniforme principal do '${nameGuest}' restaurado.`, player.id, welcomeColor, "bold", Notification.CHAT);
 			isGuestReserve = false;
 		}
 	}
@@ -3949,62 +3956,54 @@ function roomCommand(player, message){
 }
 
 function teamCommand(player, message){
+	let args = message.split(/ +/).slice(1)
+
     if (!player.admin){
-        room.sendAnnouncement(`Você precisa ser administrador para usar esse comando!`, player.id, announcementColor, "bold", Notification.CHAT)
+        room.sendAnnouncement(`[❌] Apenas administradores podem usar esse comando`, player.id, welcomeColor, "bold", Notification.CHAT)
         return
     }
 
-    let args = message.split(/ +/).slice(1)
+	let rawNames = args.slice(1).join(" ")
+	let teamPlayers = rawNames.split(/[,\s]+/).map(p => p.trim()).filter(p => p !== "")
 
-    if (args.length < 2){
-        room.sendAnnouncement(`[PV] Uso incorreto! Utilize dessa forma: !time <red(1)/blue(2)> jogador1, jogador2, jogador3.`, player.id, announcementColor, "bold", Notification.CHAT)
+    if (teamPlayers.length !== 3 && args.length !== 3){
+        room.sendAnnouncement(`[❌] Uso incorreto! Utilize dessa forma: !time <red(1)/blue(2)> jogador1, jogador2, jogador3.`, player.id, welcomeColor, "bold", Notification.CHAT)
+		return
     }
 
-    let teams = parseInt(args[0])
+	let teamColor = args[0]
 
-    if(![0, 1, 2].includes(teams)) {
-        room.sendAnnouncement(`[PV] Número de time inválido. Use 0(espectador), 1 (mandante) ou 2 (visitante).`, player.id, announcementColor, "bold", Notification.CHAT)
-    }
-
-    const RawList = message.split(/ +/).slice(2).join(" ");
-	const nameList = RawList.split(",").map(name => name.trim().toLowerCase());
-	const players = room.getPlayerList();
-
-	const matched = [];
-	const notFound = [];
-	const duplicates = [];
-
-	for (const name of nameList) {
-		if (matched.some(p => p.name.toLowerCase().includes(name))) {
-			duplicates.push(name);
-			continue;
-		}
-
-		const playerMatch = players.find(p => p.name.toLowerCase().includes(name));
-
-		if (playerMatch) {
-			matched.push(playerMatch);
-		} else {
-			notFound.push(name);
-		}
+	if (teamColor !== "red" && teamColor !== "blue"){
+		room.sendAnnouncement(`[❌] Time incorreto! Digite <red/blue>`, player.id, welcomeColor, "bold", Notification.CHAT)
+		return
 	}
 
-	for (const p of matched) {
-		room.setPlayerTeam(p.id, team);
+	let Existing = room.getPlayerList()
+
+	console.log("teamPlayers:", teamPlayers);
+	console.log("Existing names:", Existing.map(p => `"${p.name}"`).join(", "));
+
+	let missing = teamPlayers.filter(name => !Existing.some(p => p.name === name))
+	if (missing.length > 0) {
+		room.sendAnnouncement(`[❌] Jogadores não encontrados na sala: ${missing.join(", ")}`, player.id, welcomeColor, "bold", Notification.CHAT)
+        return
 	}
 
-    if (matched.length > 0) {
-		const list = matched.map(p => p.name).join(", ");
-		room.sendAnnouncement(`${matched.length} jogador(es) movido(s) para o time ${team}: ${list}`, null, announcementColor, "bold", Notification.CHAT);
+	let teamObj = {teamColor, teamPlayers}
+	savedTeams.push(teamObj)
+
+	room.sendAnnouncement(`[✅] Time ${savedTeams.length} criado (${teamColor}): ${teamPlayers.join(", ")}`, null, welcomeColor, "bold", Notification.CHAT)
+}
+
+function restoreCommand(player){
+	if(savedTeams.length === 0) {
+		room.sendAnnouncement(`[❌] Nenhum time foi criado ainda!`, player.id, welcomeColor, "bold", Notification.CHAT)
+		return
 	}
 
-	if (notFound.length > 0) {
-		room.sendAnnouncement(`[PV] Não encontrado(s): ${notFound.join(", ")}`, player.id, announcementColor, "bold", Notification.CHAT);
-	}
-
-	if (duplicates.length > 0) {
-		room.sendAnnouncement(`[PV] Ignorado(s) por duplicação: ${duplicates.join(", ")}`, player.id, announcementColor, "bold", Notification.CHAT);
-	}
+	savedTeams.forEach((t, i) => {
+		room.sendAnnouncement(`Time ${i + 1} (${t.color}): ${t.players.join(", ")}`, null, welcomeColor, "bold", Notification.CHAT)
+	})
 }
 
 function afkCommand(player, message) {
