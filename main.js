@@ -3577,6 +3577,7 @@ function centerText(string) {
     }
     return ' '.repeat(space) + string + ' '.repeat(space);
 };
+
 function docketFormat(string1, string2) {
 	if (string1 !== undefined && string2 === undefined) {
 		let space = 53 - (string1.length) * 0.8;
@@ -3660,6 +3661,24 @@ function changeUniforme(){
     room.setTeamColors(1, uniforms[acronymHome].angle, uniforms[acronymHome].textcolor, [uniforms[acronymHome].color1, uniforms[acronymHome].color2, uniforms[acronymHome].color3])
 
     room.setTeamColors(2, uniforms[acronymGuest].angle, uniforms[acronymGuest].textcolor, [uniforms[acronymGuest].color1, uniforms[acronymGuest].color2, uniforms[acronymGuest].color3])
+}
+
+function CleanName(str) {
+	return str.trim().replace(/[^\x20-\x7E]/g, "").toLowerCase()
+}
+
+function MatchPlayerName(nameInput, playerlist){
+	const matches = playerlist.filter(p => p.name.toLowerCase().includes(nameInput.toLowerCase()))
+
+	if (matches.length === 1){
+		return matches[0]
+	}
+
+	if (matches.length > 1){
+		return "ambíguo: " + matches.map(p => p.name).join(", ")
+	}
+
+	return null
 }
 
 /* Funções dos comandos */
@@ -3978,21 +3997,32 @@ function teamCommand(player, message){
 		return
 	}
 
-	let Existing = room.getPlayerList()
+	let playerlist = room.getPlayerList()
+	let matchedPlayers = []
+	let missing = []
+	
+	for (let name of teamPlayers) {
+		let result = MatchPlayerName(name, playerlist)
 
-	console.log("teamPlayers:", teamPlayers);
-	console.log("Existing names:", Existing.map(p => `"${p.name}"`).join(", "));
+		if (result === null){
+			missing.push(name)
+		} else if (typeof result === "string" && result.startsWith("ambíguo: ")) {
+			room.sendAnnouncement(`[⚠️] O nome: "${name}" é ambíguo. Correspondências: ${result.split(":")[1]}, seja mais específico!`, player.id, welcomeColor, "bold", Notification.CHAT);
+			return
+		} else {
+			matchedPlayers.push(result.name)
+		}
+	}
 
-	let missing = teamPlayers.filter(name => !Existing.some(p => p.name === name))
 	if (missing.length > 0) {
 		room.sendAnnouncement(`[❌] Jogadores não encontrados na sala: ${missing.join(", ")}`, player.id, welcomeColor, "bold", Notification.CHAT)
         return
 	}
 
-	let teamObj = {teamColor, teamPlayers}
-	savedTeams.push(teamObj)
+	let teamObj = {teamPlayers}
+	savedTeams.push(teamObj)	
 
-	room.sendAnnouncement(`[✅] Time ${savedTeams.length} criado (${teamColor}): ${teamPlayers.join(", ")}`, null, welcomeColor, "bold", Notification.CHAT)
+	room.sendAnnouncement(`[✅] Time ${savedTeams.length} criado: ${teamPlayers.join(", ")}`, null, welcomeColor, "bold", Notification.CHAT)
 }
 
 function restoreCommand(player){
