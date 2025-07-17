@@ -53,7 +53,6 @@ let goalsHome = [];
 let goalsGuest = [];
 let Hposs;
 let Gposs;
-let savedTeams = [];
 
 /* Lista de comandos */
 
@@ -3871,20 +3870,32 @@ function restartCommand(player, message){
 
 function adminCommand(player, message) {
     let msgArray = message.split(/ +/).slice(1)
-    if ((msgArray.length === 1 && msgArray[0] === adminPassword)){
+
+	if (msgArray.length === 0){
+		room.sendAnnouncement(`[📣] Digite a senha após o comando. !admin <senha>`, player.id, welcomeColor, "bold", Notification.CHAT)
+		return
+	}
+
+    if (msgArray.length === 1 && msgArray[0] === adminPassword){
         room.setPlayerAdmin(player.id, true)
         authWhiteList.push(playerAuth[player.id])
         room.sendAnnouncement(`[📣] ${player.name} agora é admin da sala!`, null, welcomeColor, "bold", Notification.CHAT)
         return
     }
-    if (msgArray.length >= 1 && player.admin){
+    if (player.admin){
         let targetName = msgArray[0].toLowerCase()
         let players = room.getPlayerList()
         let matches = players.filter(p => p.name.toLowerCase().includes(targetName))
 
         if (matches.length === 1){
             let target = matches[0]
-            room.setPlayerAdmin(target.id, true)
+
+			if (target.admin) {
+				room.sendAnnouncement(`[❌] O jogador "${target.name}" já é admin.`, player.id, welcomeColor, "bold", Notification.CHAT)
+				return
+			}
+
+			room.setPlayerAdmin(target.id, true)
             authWhiteList.push(playerAuth[target.id])
             room.sendAnnouncement(`[📣] "${target.name}" agora é admin da sala! Concebido por "${player.name}".`, null, welcomeColor, "bold", Notification.CHAT)
         } else if (matches.length > 1){
@@ -3892,31 +3903,50 @@ function adminCommand(player, message) {
         } else {
             room.sendAnnouncement(`[❌] Nenhum jogador corresponde ao nick: "${msgArray[0]}".`, player.id, welcomeColor, "bold", Notification.CHAT)
         }
-    } else if (!player.admin && msgArray.length >= 1 && msgArray[0] !== adminPassword) {
-        room.sendAnnouncement(`[❌] Comando inválido ou você não tem permissão.`, player.id, welcomeColor, "bold", Notification.CHAT)
-    }
+		return
+	} 
+
+	room.sendAnnouncement(`[❌] Senha errada.`, player.id, welcomeColor, "bold", Notification.CHAT)
 }
 
 function unadminCommand(player, message) {
     let msgArray = message.split(/ +/).slice(1)
-    if (msgArray.length >= 1 && player.admin){
+
+	if (!player.admin){
+		room.sendAnnouncement(`[❌] Apenas administradores podem usar esse comando`, player.id, welcomeColor, "bold", Notification.CHAT)
+        return;
+	}
+
+	if (msgArray.length === 0){
+		room.sendAnnouncement(`[📣] Digite um nome de alguém que tenha ADMIN após o comando. !unadmin <nome>`, player.id, welcomeColor, "bold", Notification.CHAT)
+		return
+	}
+
+    if (player.admin){
         let players = room.getPlayerList()
         let targetName = msgArray[0].toLowerCase()
         let matches = players.filter(p => p.name.toLowerCase().includes(targetName))
 
         if (matches.length === 1){
-            let target = matches[0]
+			let target = matches[0]
+
+			if (!target.admin){
+				room.sendAnnouncement(`[❌] O jogador "${target.name}" já não é admin.`, player.id, welcomeColor, "bold", Notification.CHAT)
+                return
+			}
+
             room.setPlayerAdmin(target.id, false)
-            authWhiteList.push(playerAuth[target.id])
+			authWhiteList.push(playerAuth[target.id])
             room.sendAnnouncement(`[📣] "${target.name}" deixou de ser admin da sala! Retirado por ${player.name}.`, null, welcomeColor, "bold", Notification.CHAT)
         } else if (matches.length > 1){
             room.sendAnnouncement(`[❌] Mais de um jogador corresponde ao nick "${msgArray[0]}". Seja mais específico!`, player.id, welcomeColor, "bold", Notification.CHAT)
         } else {
             room.sendAnnouncement(`[❌] Nenhum jogador corresponde ao nick "${msgArray[0]}".`, player.id, welcomeColor, "bold", Notification.CHAT)
         }
-    } else if (!player.admin && msgArray.length >= 1 && msgArray[0] !== adminPassword) {
-        room.sendAnnouncement(`[❌] Comando inválido ou você não tem permissão.`, player.id, welcomeColor, "bold", Notification.CHAT)
-    }
+		return
+	}
+
+	room.sendAnnouncement(`[❌] Você não tem permissão para usar este comando!`, player.id, welcomeColor, "bold", Notification.CHAT)
 }
 
 function leaveCommand(player, message){
