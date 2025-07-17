@@ -3862,10 +3862,21 @@ function reserveCommand(player, message){
 }	
 
 function restartCommand(player, message){
-    if (player.admin) {
-        instantRestart()
-        room.sendAnnouncement(`[📣] "${player.name}" reinicou a partida!`, null, welcomeColor, "bold", Notification.CHAT)
-    }
+
+	if (!player.admin) {
+		room.sendAnnouncement(`[⚠️] Apenas administradores podem usar esse comando`, player.id, welcomeColor, "bold", Notification.CHAT)
+        return;
+	}
+
+	let scores = room.getScores()
+
+	if (!scores){
+		room.sendAnnouncement(`[⚠️] A partida ainda não começou. Não há o que reiniciar.`, player.id, welcomeColor, "bold", Notification.CHAT)
+        return;
+	}
+
+	instantRestart()
+    room.sendAnnouncement(`[📣] "${player.name}" reiniciou a partida!`, null, welcomeColor, "bold", Notification.CHAT)
 }
 
 function adminCommand(player, message) {
@@ -3913,7 +3924,7 @@ function unadminCommand(player, message) {
     let msgArray = message.split(/ +/).slice(1)
 
 	if (!player.admin){
-		room.sendAnnouncement(`[❌] Apenas administradores podem usar esse comando`, player.id, welcomeColor, "bold", Notification.CHAT)
+		room.sendAnnouncement(`[⚠️] Apenas administradores podem usar esse comando`, player.id, welcomeColor, "bold", Notification.CHAT)
         return;
 	}
 
@@ -3958,7 +3969,7 @@ function roomCommand(player, message){
     let msgArray = message.split(/ +/).slice(1)
 
     if (!player.admin) {
-        room.sendAnnouncement(`[❌] Apenas administradores podem usar esse comando`, player.id, welcomeColor, "bold", Notification.CHAT)
+        room.sendAnnouncement(`[⚠️] Apenas administradores podem usar esse comando`, player.id, welcomeColor, "bold", Notification.CHAT)
         return;
     }
 
@@ -3973,7 +3984,7 @@ function roomCommand(player, message){
     }
 
     if (room.getScores() !== null){
-        room.sendAnnouncement(`[🚫] Não é possível trocar o mapa durante uma partida em andamento.`, player.id, welcomeColor, "bold", Notification.CHAT);
+        room.sendAnnouncement(`[❌] Não é possível trocar o mapa durante uma partida em andamento.`, player.id, welcomeColor, "bold", Notification.CHAT);
         return;
     }
 
@@ -4003,7 +4014,7 @@ function afkCommand(player, message) {
     const isAFK = afkPlayers.has(player.id)
 
     if (player.team === 1 || player.team === 2) {
-        room.sendAnnouncement(`[❌] Você não pode ativar AFK enquanto está em jogo.`, player.id, welcomeColor, "bold", Notification.CHAT);
+        room.sendAnnouncement(`[❌] Você não pode ativar AFK enquanto está em jogo ou estiver em um time.`, player.id, welcomeColor, "bold", Notification.CHAT);
         return;
     }
 
