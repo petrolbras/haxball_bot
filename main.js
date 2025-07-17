@@ -82,18 +82,6 @@ const commands = {
         "desc": `Este comando muda o uniforme de seu time para o uniforme reserva disponível.`,
         "function": reserveCommand,
     },
-    "time": {
-        "similar": ['team', 'tm'],
-        "roles": Role.ADMIN,
-        "desc": `Este comando define os times da sala.`,
-        "function": teamCommand,
-    },
-	"restaurarTimes": {
-		"similar": [],
-		"roles": Role.ADMIN,
-		"desc": `Este comando redefine os times criados`,
-		"function": restoreCommand,
-	},
     "restart": {
         "similar": ['rr', 'res'],
         "roles": Role.ADMIN,
@@ -3664,11 +3652,18 @@ function changeUniforme(){
 }
 
 function CleanName(str) {
-	return str.trim().replace(/[^\x20-\x7E]/g, "").toLowerCase()
+	return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^\w\s]/g, "").toLowerCase().trim()
 }
 
 function MatchPlayerName(nameInput, playerlist){
-	const matches = playerlist.filter(p => p.name.toLowerCase().includes(nameInput.toLowerCase()))
+	const inputClean = CleanName(nameInput)
+
+	const exact = playerlist.find(p => CleanName(p.name) === inputClean)
+	if (exact){
+		return exact
+	}
+
+	const matches = playerlist.filter(p => CleanName(p.name).includes(inputClean))
 
 	if (matches.length === 1){
 		return matches[0]
@@ -3972,68 +3967,6 @@ function roomCommand(player, message){
     } else {
         room.sendAnnouncement(`[❌] O mapa "${nome}" não existe.`, player.id, welcomeColor, "bold", Notification.CHAT)
     }
-}
-
-function teamCommand(player, message){
-	let args = message.split(/ +/).slice(1)
-
-    if (!player.admin){
-        room.sendAnnouncement(`[❌] Apenas administradores podem usar esse comando`, player.id, welcomeColor, "bold", Notification.CHAT)
-        return
-    }
-
-	let rawNames = args.slice(1).join(" ")
-	let teamPlayers = rawNames.split(/[,\s]+/).map(p => p.trim()).filter(p => p !== "")
-
-    if (teamPlayers.length !== 3 && args.length !== 3){
-        room.sendAnnouncement(`[❌] Uso incorreto! Utilize dessa forma: !time <red(1)/blue(2)> jogador1, jogador2, jogador3.`, player.id, welcomeColor, "bold", Notification.CHAT)
-		return
-    }
-
-	let teamColor = args[0]
-
-	if (teamColor !== "red" && teamColor !== "blue"){
-		room.sendAnnouncement(`[❌] Time incorreto! Digite <red/blue>`, player.id, welcomeColor, "bold", Notification.CHAT)
-		return
-	}
-
-	let playerlist = room.getPlayerList()
-	let matchedPlayers = []
-	let missing = []
-	
-	for (let name of teamPlayers) {
-		let result = MatchPlayerName(name, playerlist)
-
-		if (result === null){
-			missing.push(name)
-		} else if (typeof result === "string" && result.startsWith("ambíguo: ")) {
-			room.sendAnnouncement(`[⚠️] O nome: "${name}" é ambíguo. Correspondências: ${result.split(":")[1]}, seja mais específico!`, player.id, welcomeColor, "bold", Notification.CHAT);
-			return
-		} else {
-			matchedPlayers.push(result.name)
-		}
-	}
-
-	if (missing.length > 0) {
-		room.sendAnnouncement(`[❌] Jogadores não encontrados na sala: ${missing.join(", ")}`, player.id, welcomeColor, "bold", Notification.CHAT)
-        return
-	}
-
-	let teamObj = {teamPlayers}
-	savedTeams.push(teamObj)	
-
-	room.sendAnnouncement(`[✅] Time ${savedTeams.length} criado: ${teamPlayers.join(", ")}`, null, welcomeColor, "bold", Notification.CHAT)
-}
-
-function restoreCommand(player){
-	if(savedTeams.length === 0) {
-		room.sendAnnouncement(`[❌] Nenhum time foi criado ainda!`, player.id, welcomeColor, "bold", Notification.CHAT)
-		return
-	}
-
-	savedTeams.forEach((t, i) => {
-		room.sendAnnouncement(`Time ${i + 1} (${t.color}): ${t.players.join(", ")}`, null, welcomeColor, "bold", Notification.CHAT)
-	})
 }
 
 function afkCommand(player, message) {
