@@ -28,6 +28,7 @@ let isHomeReserve = false;
 let isGuestReserve = false;
 let isGameRunning = false
 let afkPlayers = new Set();
+let teamChangeCooldown = new Set()
 let mapaAtual = false
 
 /* Cores */
@@ -3409,7 +3410,7 @@ room.onTeamGoal = function (team) {
 
 	} else {
 		room.sendAnnouncement(``, null, welcomeColor, "bold", Notification.CHAT);
-		room.sendAnnouncement(centerText(`🤦‍♂️ É pro outro lado ${lastPlayerKick}! Gol Contra! 🤦‍♂️`), null, welcomeColor, "bold", 0);
+		room.sendAnnouncement(centerText(`🤦‍♂️ É pro outro lado ${lastPlayerKick.name}! Gol Contra! 🤦‍♂️`), null, welcomeColor, "bold", 0);
 		room.sendAnnouncement(centerText(`Velocidade do Chute: ${ballSpeed.toFixed()}km/h`), null, welcomeColor, "bold", 0);
 		room.setPlayerAvatar(lastPlayerKick.id, '🤡');
 		setTimeout(function () { room.setPlayerAvatar(lastPlayerKick.id,); }, 2000);
