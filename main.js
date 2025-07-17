@@ -23,14 +23,11 @@ let point = [
 let ballSpeed;
 let lastPlayerKick = { id: 0, team: 0 };
 let penultPlayerKick;
-let undefeatedScore = 0;
 let players;
-let numberEachTeam;
 let isHomeReserve = false;
 let isGuestReserve = false;
 let isGameRunning = false
 let afkPlayers = new Set();
-let teamChangeCooldown = new Set()
 let mapaAtual = false
 
 /* Cores */
@@ -3356,11 +3353,6 @@ room.onGameStart = function () {
 	room.sendAnnouncement(centerText(`🥅🥅 PARTIDA INICIANDO 🥅🥅`), null, welcomeColor, "bold", Notification.CHAT);
 	room.sendAnnouncement(centerText(`${emojiHome} ${nameHome} X ${nameGuest} ${emojiGuest}`), null, welcomeColor, "bold", 0);
 
-	if (undefeatedScore !== 0) {
-		room.sendAnnouncement(centerText(`     📢 ${nameHome} está invicto 📢`), null, welcomeColor, "bold", 0);
-		room.sendAnnouncement(centerText(`     📢 Sequência de ${undefeatedScore} jogo(s) 📢`), null, welcomeColor, "bold", 0);
-	}
-
 	Hposs = 0;
 	Gposs = 0;
     isHomeReserve = false;
@@ -3376,21 +3368,7 @@ room.onPlayerJoin = function(player) {
     room.sendAnnouncement((`──────────────────────────────────────────────────────────────`), player.id, welcomeColor, "bold", Notification.CHAT)
     room.sendAnnouncement(centerText(`📢 Bem-Vindo ${player.name}! digite "!ajuda" para a lista de comandos do server.`), player.id, welcomeColor, "bold", Notification.CHAT);
     room.sendAnnouncement((`──────────────────────────────────────────────────────────────`), player.id, welcomeColor, "bold", Notification.CHAT)
-    let players = room.getPlayerList()
-    if(players.length < 7){
-        numberEachTeam = parseInt(players.length / 2)
-    } else {
-        numberEachTeam = 3;
-    }
-}
 
-room.onPlayerLeave = function(player) {
-    let players = room.getPlayerList()
-    if(players.length < 7){
-        numberEachTeam = parseInt(players.length / 2)
-    } else {
-        numberEachTeam = 3;
-    }
 }
 
 room.onPlayerChat = function(player, message) {
@@ -3421,34 +3399,22 @@ room.onTeamGoal = function (team) {
 		room.sendAnnouncement(centerText(`⚽ Autor: ${lastPlayerKick.name} ⚽`), null, welcomeColor, "bold", 0);
 		room.sendAnnouncement(centerText(`Velocidade do Chute: ${ballSpeed.toFixed()}km/h`), null, welcomeColor, "bold", 0);
         room.setPlayerAvatar(lastPlayerKick.id, '⚽');
-		setTimeout(function () { room.setPlayerAvatar(lastPlayerKick.id,); }, 2400);
+		setTimeout(function () { room.setPlayerAvatar(lastPlayerKick.id,); }, 2000);
 
 		if (penultPlayerKick.team === team) {
 			room.sendAnnouncement(centerText(`👟 Assistência: ${penultPlayerKick.name}👟`), null, welcomeColor, "bold", 0);
 			room.setPlayerAvatar(penultPlayerKick.id, '👟');
-			setTimeout(function () { room.setPlayerAvatar(penultPlayerKick.id,); }, 2400);
-		}
-
-		if (team === 1) {
-			goalsHome.push(`${lastPlayerKick.name}  ${goalTime}`);
-		} else if (team === 2) {
-			goalsGuest.push(`${lastPlayerKick.name}  ${goalTime}`);
+			setTimeout(function () { room.setPlayerAvatar(penultPlayerKick.id,); }, 2000);
 		}
 
 	} else {
 		room.sendAnnouncement(``, null, welcomeColor, "bold", Notification.CHAT);
-		room.sendAnnouncement(centerText(`🤦‍♂️ Boa seu merda! Gol Contra! 🤦‍♂️`), null, welcomeColor, "bold", 0);
-		room.sendAnnouncement(centerText(`🤡 Autor: ${lastPlayerKick.name} 🤡`), null, welcomeColor, "bold", 0);
+		room.sendAnnouncement(centerText(`🤦‍♂️ É pro outro lado ${lastPlayerKick}! Gol Contra! 🤦‍♂️`), null, welcomeColor, "bold", 0);
 		room.sendAnnouncement(centerText(`Velocidade do Chute: ${ballSpeed.toFixed()}km/h`), null, welcomeColor, "bold", 0);
 		room.setPlayerAvatar(lastPlayerKick.id, '🤡');
-		setTimeout(function () { room.setPlayerAvatar(lastPlayerKick.id,); }, 2400);
-
-		if (team === 1) {
-			goalsHome.push(`${lastPlayerKick.name} (C)  ${goalTime}`);
-		} else if (team === 2) {
-			goalsGuest.push(`${lastPlayerKick.name} (C)  ${goalTime}`);
-		}
+		setTimeout(function () { room.setPlayerAvatar(lastPlayerKick.id,); }, 2000);
 	}
+
 	room.sendAnnouncement(centerText(`${emojiHome} ${nameHome} ${scores.red} - ${scores.blue} ${nameGuest} ${emojiGuest}`), null, welcomeColor, "bold", 0);
 }
 
@@ -3485,60 +3451,10 @@ room.onTeamVictory = function () {
 	room.sendAnnouncement(centerText(`${emojiHome} ${nameHome} ${scores.red} - ${scores.blue} ${nameGuest} ${emojiGuest}`), null, 0x0000FF, "bold", 0);
 	room.sendAnnouncement(centerText(`${emojiHome} ` + (Hposs * 100).toPrecision(2).toString() + `%` + `  Posse de bola  ` + (Gposs * 100).toPrecision(2).toString() + `% ${emojiGuest}`), null, welcomeColor, "bold", 0);
 
-	for (let i = 0; i < 3; i++) {
-		room.sendAnnouncement(docketFormat(goalsHome[i], goalsGuest[i]), null, welcomeColor, "bold", 0);
-	}
-
-	if (scores.red > scores.blue) {
-		setTimeout(function () {
-			for (let i = 0; i < playersTeamGuest.length; i++) {
-				room.setPlayerTeam(playersTeamGuest[i].id, 0);
-			}
-		}, 6000);
-
-		setTimeout(function () {
-			for (let i = 0; i < numberEachTeam; i++) {
-				room.setPlayerTeam(playersTeamEspec[i].id, 2);
-			}
-		}, 7000);
-
-		undefeatedScore++;
-		setTimeout(function () { room.startGame(); }, 9000);
-
-	} else {
-		setTimeout(function () {
-			for (let i = 0; i < playersTeamHome.length; i++) {
-				room.setPlayerTeam(playersTeamHome[i].id, 0);
-			}
-		}, 6000);
-
-		setTimeout(function () {
-			for (let i = 0; i < playersTeamGuest.length; i++) {
-				room.setPlayerTeam(playersTeamGuest[i].id, 1);
-			}
-		}, 7000);
-
-		setTimeout(function () {
-			for (let i = 0; i < numberEachTeam; i++) {
-				room.setPlayerTeam(playersTeamEspec[i].id, 2);
-			}
-		}, 8000);
-
-		undefeatedScore = 0;
-		undefeatedScore++;
-
-		setTimeout(function () { changeUniforme(); }, 8000);
-
-		setTimeout(function () { room.startGame(); }, 9000);
-	}
-
 	setTimeout(function () { 
 		lastPlayerKick = { id: 0, team: 0 };
 		penultPlayerKick = undefined;
-		goalsHome = [];
-		goalsGuest = [];
 	}, 8000);
-	
 }
 
 room.onGameTick = function(){
@@ -3564,20 +3480,6 @@ function centerText(string) {
     }
     return ' '.repeat(space) + string + ' '.repeat(space);
 };
-
-function docketFormat(string1, string2) {
-	if (string1 !== undefined && string2 === undefined) {
-		let space = 53 - (string1.length) * 0.8;
-		return ' '.repeat(space) + string1
-	} else if (string2 !== undefined && string1 === undefined) {
-		return ' '.repeat(77) + string2
-	} else if (string2 !== undefined && string1 !== undefined) {
-		let space = 16 - (string1.length + 10 + string2.length)
-		return ' '.repeat(12) + centerText(string1 + ' '.repeat(10) + string2)
-	} else if (string1 === undefined && string2 === undefined) {
-		return ''
-	}
-}
 
 function updateTeams() {
 	let players = room.getPlayerList();
