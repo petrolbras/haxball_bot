@@ -5,7 +5,6 @@
 ## ➤ ⚙️ Funcionalidades principais: 
 
 - `!sala <nome>` – troca de mapa customizado.
-- `!time <número> jogador1, jogador2` – distribui jogadores em times.
 - `!uniforme <time>` – aplica uniformes estilizados.
 - `!reserva <time>` – troca o kit para reserva.
 - Verificação automática de permissões.
