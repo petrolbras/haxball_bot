@@ -30,6 +30,7 @@ let isGameRunning = false
 let afkPlayers = new Set();
 let teamChangeCooldown = new Set()
 let mapaAtual = false
+let IgnorarTrocaBot = false
 
 /* Cores */
 
@@ -3392,30 +3393,49 @@ room.onPlayerBallKick = function (player) {
 }
 
 room.onTeamGoal = function (team) {
-    const goalTime = getTime()
     const scores = room.getScores()
     if (lastPlayerKick.team === team) {
 		room.sendAnnouncement(``, null, welcomeColor, "bold", Notification.CHAT);
 		room.sendAnnouncement(centerText(`TOCA A MÚSICAAA, É GOOOOOL!!!`), null, welcomeColor, "bold", 0);
 		room.sendAnnouncement(centerText(`⚽ Autor: ${lastPlayerKick.name} ⚽`), null, welcomeColor, "bold", 0);
 		room.sendAnnouncement(centerText(`Velocidade do Chute: ${ballSpeed.toFixed()}km/h`), null, welcomeColor, "bold", 0);
-        room.setPlayerAvatar(lastPlayerKick.id, '⚽');
-		setTimeout(function () { room.setPlayerAvatar(lastPlayerKick.id,); }, 2000);
+        setTimeout(() => {
+            room.setPlayerAvatar(lastPlayerKick.id, "⚽");
+        }, 1);
+        setTimeout(() => {
+            room.setPlayerAvatar(lastPlayerKick.id, null);
+        }, 2500);
+		setTimeout(() => {
+            room.setPlayerAvatar(lastPlayerKick.id, null);
+        }, 2500);
 
 		if (penultPlayerKick.team === team) {
 			room.sendAnnouncement(centerText(`👟 Assistência: ${penultPlayerKick.name}👟`), null, welcomeColor, "bold", 0);
-			room.setPlayerAvatar(penultPlayerKick.id, '👟');
-			setTimeout(function () { room.setPlayerAvatar(penultPlayerKick.id,); }, 2000);
+            setTimeout(() => {
+                room.setPlayerAvatar(penultPlayerKick.id, "👟");
+            }, 1);
+            setTimeout(() => {
+                room.setPlayerAvatar(penultPlayerKick.id, null);
+            }, 2500);
+			setTimeout(() => {
+				room.setPlayerAvatar(lastPlayerKick.id, null);
+			}, 2500);
 		}
 
 	} else {
 		room.sendAnnouncement(``, null, welcomeColor, "bold", Notification.CHAT);
 		room.sendAnnouncement(centerText(`🤦‍♂️ É pro outro lado ${lastPlayerKick.name}! Gol Contra! 🤦‍♂️`), null, welcomeColor, "bold", 0);
 		room.sendAnnouncement(centerText(`Velocidade do Chute: ${ballSpeed.toFixed()}km/h`), null, welcomeColor, "bold", 0);
-		room.setPlayerAvatar(lastPlayerKick.id, '🤡');
-		setTimeout(function () { room.setPlayerAvatar(lastPlayerKick.id,); }, 2000);
+        setTimeout(() => {
+            room.setPlayerAvatar(lastPlayerKick.id, "🤡");
+        }, 1);
+        setTimeout(() => {
+            room.setPlayerAvatar(lastPlayerKick.id, null);
+        }, 2500);
+		setTimeout(() => {
+            room.setPlayerAvatar(lastPlayerKick.id, null);
+        }, 2500);
 	}
-
 	room.sendAnnouncement(centerText(`${emojiHome} ${nameHome} ${scores.red} - ${scores.blue} ${nameGuest} ${emojiGuest}`), null, welcomeColor, "bold", 0);
 }
 
@@ -3423,8 +3443,16 @@ room.onPlayerTeamChange = function (player) {
 	if (teamChangeCooldown.has(player.id)) return
 
     if(player.id == 0) {
-        room.setPlayerTeam(player.id, 0);
+
+		if (IgnorarTrocaBot){
+			IgnorarTrocaBot = false
+			return
+		}
+
         room.sendAnnouncement(`[⚠️] Você não pode colocar o bot para jogar!`, null , welcomeColor, "bold", Notification.CHAT);
+
+		IgnorarTrocaBot = true
+		room.setPlayerTeam(player.id, 0);
 		return
     }
 
@@ -3432,7 +3460,6 @@ room.onPlayerTeamChange = function (player) {
 		teamChangeCooldown.add(player.id)
         room.setPlayerTeam(player.id, 0);
         room.sendAnnouncement(`[⚠️] O jogador "${player.name}" está AFK`, player.id , welcomeColor, "bold", Notification.CHAT);
-
 		setTimeout(() => {
 			teamChangeCooldown.delete(player.id)
 		}, 100)
@@ -3449,7 +3476,7 @@ room.onTeamVictory = function () {
 	Gposs = 1 - Hposs;
 
 	room.sendAnnouncement(centerText(`🏆 FIM DE PARTIDA 🏆`), null, welcomeColor, "bold", Notification.CHAT);
-	room.sendAnnouncement(centerText(`${emojiHome} ${nameHome} ${scores.red} - ${scores.blue} ${nameGuest} ${emojiGuest}`), null, 0x0000FF, "bold", 0);
+	room.sendAnnouncement(centerText(`${emojiHome} ${nameHome} ${scores.red} - ${scores.blue} ${nameGuest} ${emojiGuest}`), null, welcomeColor, "bold", 0);
 	room.sendAnnouncement(centerText(`${emojiHome} ` + (Hposs * 100).toPrecision(2).toString() + `%` + `  Posse de bola  ` + (Gposs * 100).toPrecision(2).toString() + `% ${emojiGuest}`), null, welcomeColor, "bold", 0);
 
 	setTimeout(function () { 
@@ -3544,8 +3571,8 @@ function changeUniforme(){
     acronymHome = acronymGuest;
     acronymGuest = b
 
-    let c = emojihome
-    emojihome = emojiGuest
+    let c = emojiHome
+    emojiHome = emojiGuest
     emojiGuest = c
 
     room.setTeamColors(1, uniforms[acronymHome].angle, uniforms[acronymHome].textcolor, [uniforms[acronymHome].color1, uniforms[acronymHome].color2, uniforms[acronymHome].color3])
@@ -3689,7 +3716,7 @@ function uniformCommand (player,message) {
         if (targetTeam == 1){
             nameHome = uniforms[uniformName].name;
             acronymHome = uniformName;
-            emojihome = uniforms[uniformName].emoji;
+            emojiHome = uniforms[uniformName].emoji;
         } else if (targetTeam == 2){
             nameGuest = uniforms[uniformName].name;
             acronymGuest = uniformName;
@@ -3791,15 +3818,28 @@ function adminCommand(player, message) {
 	}
 
     if (msgArray.length === 1 && msgArray[0] === adminPassword){
+
+		if (player.admin) {
+			room.sendAnnouncement(`[⚠️] Você já é admin.`, player.id, welcomeColor, "bold", Notification.CHAT)
+			return
+		}
+
         room.setPlayerAdmin(player.id, true)
         authWhiteList.push(playerAuth[player.id])
         room.sendAnnouncement(`[📣] ${player.name} agora é admin da sala!`, null, welcomeColor, "bold", Notification.CHAT)
         return
     }
+
     if (player.admin){
         let targetName = msgArray[0].toLowerCase()
+
+		if (targetName.length < 3) {
+			room.sendAnnouncement(`[❌] Especifique, pelo menos, 3 letras do nome.`, player.id, welcomeColor, "bold", Notification.CHAT)
+			return
+		}
+
         let players = room.getPlayerList()
-        let matches = players.filter(p => p.name.toLowerCase().includes(targetName))
+        let matches = players.filter(p => p.name.toLowerCase().startsWith(targetName))
 
         if (matches.length === 1){
             let target = matches[0]
