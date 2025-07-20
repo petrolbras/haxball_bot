@@ -32,6 +32,9 @@ let teamChangeCooldown = new Set()
 let mapaAtual = false
 let IgnorarTrocaBot = false
 let OnOvertime = false
+let checkTimeVariable = false;
+let drawTimeLimit = 1
+let announced = false
 
 /* Cores */
 
@@ -53,6 +56,11 @@ let goalsHome = [];
 let goalsGuest = [];
 let Hposs;
 let Gposs;
+const Team = {
+    SPECTATORS: 0,
+    RED: 1,
+    BLUE: 2
+};
 
 /* Lista de comandos */
 
@@ -3362,7 +3370,10 @@ room.onGameStart = function () {
     isHomeReserve = false;
     isGuestReserve = false;
 	isGameRunning = true;
-	OnOvertime = false
+	OnOvertime = false;
+	announcedOvertime = false;
+	announcedNormal = false;
+	checkTimeVariable = false;
 	console.log("Tempo limite da partida:", room.getScores()?.timeLimit);
 }
 
@@ -3612,11 +3623,44 @@ function MatchPlayerName(nameInput, playerlist){
 function Prorrogração(){
 	const scores = room.getScores()
 	if (Math.abs(scores.time - scores.timeLimit) <= 0.01 && scores.timeLimit != 0) {
-		room.sendAnnouncement((`──────────────────────────────────────────────────────────────`), null, welcomeColor, "bold", Notification.CHAT)
-		room.sendAnnouncement(centerText("[📢] PRORROGAÇÃO! Primeiro gol vence! ⚽"), null, welcomeColor, "bold", Notification.CHAT);
-		room.sendAnnouncement((`──────────────────────────────────────────────────────────────`), null, welcomeColor, "bold", Notification.CHAT)
-		OnOvertime = true
+		if (scores.red !== scores.blue) {
+			if(checkTimeVariable === false) {
+				checkTimeVariable = true
+				setTimeout(() => {
+					checkTimeVariable = false
+				}, 3000)
+				setTimeout(() => {
+					room.stopGame()
+				}, 2000)
+			}
+			return
+		}
+		if(OnOvertime === false) {
+			OnOvertime = true
+			announcedOvertime = false
+			room.sendAnnouncement((`──────────────────────────────────────────────────────────────`), null, welcomeColor, "bold", Notification.CHAT)
+			room.sendAnnouncement(centerText("[📢] PRORROGAÇÃO! Primeiro gol vence! ⚽"), null, welcomeColor, "bold", Notification.CHAT);
+			room.sendAnnouncement((`──────────────────────────────────────────────────────────────`), null, welcomeColor, "bold", Notification.CHAT)
+		}
 	}
+	if (scores.time > scores.timeLimit - 15 && !announcedNormal && !OnOvertime && scores.timeLimit > 0) {
+		announcedNormal = true
+		room.sendAnnouncement(centerText("[⌛] 15 segundos para o fim do tempo normal!"), null, welcomeColor, "bold", Notification.CHAT);
+	}
+	if (scores.time > scores.timeLimit + drawTimeLimit * 60 - 15 && !announcedOvertime && OnOvertime) {
+			announcedOvertime = true
+            room.sendAnnouncement(centerText("[⌛] 15 segundos para o empate!"), null, welcomeColor, "bold", Notification.CHAT);
+    }
+	if (scores.time > (scores.timeLimit + drawTimeLimit * 60)) {
+        if (checkTimeVariable === false) {
+            checkTimeVariable = true;
+            setTimeout(() => { 
+				checkTimeVariable = false; 
+			}, 10);
+            room.stopGame();
+			OnOvertime = false
+        }
+    }
 }
 
 /* Funções dos comandos */
