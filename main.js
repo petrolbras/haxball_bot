@@ -3397,6 +3397,10 @@ room.onPlayerChat = function(player, message) {
             return false
         }
     }
+
+	ColoredMessage(player, message)
+
+	return false
 }
 
 room.onPlayerBallKick = function (player) {
@@ -3661,6 +3665,34 @@ function Prorrogração(){
 			OnOvertime = false
         }
     }
+}
+
+function ColoredMessage(player, message){
+	let team = player.team
+
+	if (player.id === 0) {
+		return false
+	}
+
+	if (player.admin) {
+		let ChatColor = commandsColor
+		let CustomEmoji = "⭐"
+		room.sendAnnouncement(`[${CustomEmoji}] ${player.name}: ${message}`, null, ChatColor, "normal")
+	} else if (team === 1) {
+		let ChatColor = 0xFF7438
+		let CustomEmoji = "🔴"
+		room.sendAnnouncement(`[${CustomEmoji}] ${player.name}: ${message}`, null, ChatColor, "normal")
+	} else if (team === 2){
+		let ChatColor = 0x2C6AC7
+		let CustomEmoji = "🔵"
+		room.sendAnnouncement(`[${CustomEmoji}] ${player.name}: ${message}`, null, ChatColor, "normal")
+	} else {
+		let ChatColor = 0xFFFFFF
+		let CustomEmoji = ""
+		room.sendAnnouncement(`${CustomEmoji} ${player.name}: ${message}`, null, ChatColor, "normal")
+	}
+
+	return false
 }
 
 /* Funções dos comandos */
