@@ -31,6 +31,7 @@ let afkPlayers = new Set();
 let teamChangeCooldown = new Set()
 let mapaAtual = false
 let IgnorarTrocaBot = false
+let OnOvertime = false
 
 /* Cores */
 
@@ -3357,9 +3358,12 @@ room.onGameStart = function () {
 
 	Hposs = 0;
 	Gposs = 0;
+
     isHomeReserve = false;
     isGuestReserve = false;
 	isGameRunning = true;
+	OnOvertime = false
+	console.log("Tempo limite da partida:", room.getScores()?.timeLimit);
 }
 
 room.onGameStop = function(){
@@ -3368,9 +3372,8 @@ room.onGameStop = function(){
 
 room.onPlayerJoin = function(player) {
     room.sendAnnouncement((`──────────────────────────────────────────────────────────────`), player.id, welcomeColor, "bold", Notification.CHAT)
-    room.sendAnnouncement(centerText(`📢 Bem-Vindo ${player.name}! digite "!ajuda" para a lista de comandos do server.`), player.id, welcomeColor, "bold", Notification.CHAT);
+    room.sendAnnouncement(centerText(`📢 Bem-vindo ${player.name}! digite "!ajuda" para a lista de comandos do server.`), player.id, welcomeColor, "bold", Notification.CHAT);
     room.sendAnnouncement((`──────────────────────────────────────────────────────────────`), player.id, welcomeColor, "bold", Notification.CHAT)
-
 }
 
 room.onPlayerChat = function(player, message) {
@@ -3401,10 +3404,10 @@ room.onTeamGoal = function (team) {
 		room.sendAnnouncement(centerText(`Velocidade do Chute: ${ballSpeed.toFixed()}km/h`), null, welcomeColor, "bold", 0);
         setTimeout(() => {
             room.setPlayerAvatar(lastPlayerKick.id, "⚽");
+			setTimeout(() => {
+				room.setPlayerAvatar(lastPlayerKick.id, null);
+			}, 2500);
         }, 1);
-        setTimeout(() => {
-            room.setPlayerAvatar(lastPlayerKick.id, null);
-        }, 2500);
 		setTimeout(() => {
             room.setPlayerAvatar(lastPlayerKick.id, null);
         }, 2500);
@@ -3413,12 +3416,12 @@ room.onTeamGoal = function (team) {
 			room.sendAnnouncement(centerText(`👟 Assistência: ${penultPlayerKick.name}👟`), null, welcomeColor, "bold", 0);
             setTimeout(() => {
                 room.setPlayerAvatar(penultPlayerKick.id, "👟");
+				setTimeout(() => {
+					room.setPlayerAvatar(penultPlayerKick.id, null);
+				}, 2500);
             }, 1);
-            setTimeout(() => {
-                room.setPlayerAvatar(penultPlayerKick.id, null);
-            }, 2500);
 			setTimeout(() => {
-				room.setPlayerAvatar(lastPlayerKick.id, null);
+				room.setPlayerAvatar(penultPlayerKick.id, null);
 			}, 2500);
 		}
 
@@ -3428,10 +3431,10 @@ room.onTeamGoal = function (team) {
 		room.sendAnnouncement(centerText(`Velocidade do Chute: ${ballSpeed.toFixed()}km/h`), null, welcomeColor, "bold", 0);
         setTimeout(() => {
             room.setPlayerAvatar(lastPlayerKick.id, "🤡");
+			setTimeout(() => {
+                room.setPlayerAvatar(lastPlayerKick.id, null);
+            }, 2500);
         }, 1);
-        setTimeout(() => {
-            room.setPlayerAvatar(lastPlayerKick.id, null);
-        }, 2500);
 		setTimeout(() => {
             room.setPlayerAvatar(lastPlayerKick.id, null);
         }, 2500);
@@ -3486,6 +3489,7 @@ room.onTeamVictory = function () {
 }
 
 room.onGameTick = function(){
+	Prorrogração()
     getStats()
 }
 
@@ -3602,7 +3606,17 @@ function MatchPlayerName(nameInput, playerlist){
 		return "ambíguo: " + matches.map(p => p.name).join(", ")
 	}
 
-	return null
+	return null	
+}
+
+function Prorrogração(){
+	const scores = room.getScores()
+	if (Math.abs(scores.time - scores.timeLimit) <= 0.01 && scores.timeLimit != 0) {
+		room.sendAnnouncement((`──────────────────────────────────────────────────────────────`), null, welcomeColor, "bold", Notification.CHAT)
+		room.sendAnnouncement(centerText("[📢] PRORROGAÇÃO! Primeiro gol vence! ⚽"), null, welcomeColor, "bold", Notification.CHAT);
+		room.sendAnnouncement((`──────────────────────────────────────────────────────────────`), null, welcomeColor, "bold", Notification.CHAT)
+		OnOvertime = true
+	}
 }
 
 /* Funções dos comandos */
