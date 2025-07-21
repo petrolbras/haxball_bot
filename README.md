@@ -11,6 +11,7 @@
 - Bloqueio de troca de mapa durante partidas ativas.
 - Delay automático para correção de bugs do setCustomStadium.
 - Controle de fluxo e proteção contra comandos mal utilizados.
+- Sistema de MVP [🏆]
 
 <p align="center">
   <img src="assets/haxball-gradient-line.png" width="100%">
@@ -33,6 +34,8 @@ Se você está interessado em usar este bot ->
 3. Copie o código de **`main.js`** e cole no console.
 4. Aperte enter e complete o captcha.
 5. Aperte botão direito no link que surgirá e clique em "Abrir link em uma nova guia".
+(Se a mensagem "HBInit is not defined" aparecer, apenas dê F5 e coloque novamente o código. Persista até conseguir)
+-> Não encontrei uma solução definitiva para dar certo de primeira; às vezes funciona, às vezes não.
 
 <p align="center">
   <img src="assets/haxball-gradient-line.png" width="100%">
