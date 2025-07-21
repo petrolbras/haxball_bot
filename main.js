@@ -62,7 +62,34 @@ const Team = {
     RED: 1,
     BLUE: 2
 };
-
+const frasesgol = [
+	" QUE GOL É ESSE, SENHORAS E SENHORES! Você é uma lenda, ",
+	" GOOOOOOOOOOL! O MUNDO PRECISA DE MAIS COMO VOCÊ, ",
+	" Olha esse gol do(a) ",
+	" É GOOOOOL do(a) ",
+	" BELLIGOL BELLIGOL, É ELE! ",
+	" GOOOOOOOOOOL! APARECENDO QUANDO MAIS PRECISAMOS, GRAÇAS AO ",
+	" MINHA NOSSA SENHORA!!!! O IMPOSSÍVEL ACONTECEU MEU DEUS DO CÉU, É GOL DO(A) ",
+	" QUE GOLAÇO DO(A) ",
+	" Impresionante a finalização do(a) ",
+	" Desculpe o xingamento, MAS PUTA QUE PARIUUU, QUE GOL É ESSE, ",
+	" É CAIXA, É CAIXA, É CAIXA, É GOOOOOOOOOL DO(A) "
+];
+const frasesasis = [
+	" com o lindo passe de ",
+	" acompanhado do belíssimo passe de ",
+	" com o bolão na boca do gol de ",
+	" com a assistência fenomenal de ",
+	" e não podemos esquecer do passe magnífico de"
+];
+const frasesautogol = [
+	" Fez igual o fuzaro contra o boca! Parabéns ",
+	" Tenho certeza que foi sem querer né, ",
+	" TÁ JOGANDO NO TIME ERRADO, ",
+	" PARABÉNS!! O TIME ADVERSÁRIO AGRADECE, ",
+	" É GOOOOOOOOOL... contra do  ",
+	" Volta pro mar oferenda, "
+];
 /* Lista de comandos */
 
 const commands = {
@@ -3363,7 +3390,6 @@ room.setTeamsLock(true);
 
 room.onGameStart = function () {
 	room.sendAnnouncement(centerText(`🥅🥅 PARTIDA INICIANDO 🥅🥅`), null, welcomeColor, "bold", Notification.CHAT);
-	room.sendAnnouncement(centerText(`${emojiHome} ${nameHome} X ${nameGuest} ${emojiGuest}`), null, welcomeColor, "bold", 0);
 
 	for (let player of playerList) {
         if(player.isInTheRoom) {
@@ -3445,10 +3471,15 @@ room.onTeamGoal = function (team) {
 	updatePlayerStatsOnGoal(scorer, assistant, isOwnGoal);
 
     if (!isOwnGoal) {
-        room.sendAnnouncement(``, null, welcomeColor, "bold", Notification.CHAT);
-        room.sendAnnouncement(centerText(`TOCA A MÚSICAAA, É GOOOOOL!!!`), null, welcomeColor, "bold", 0);
-        room.sendAnnouncement(centerText(`⚽ Autor: ${scorer.name} ⚽`), null, welcomeColor, "bold", 0);
-        room.sendAnnouncement(centerText(`Velocidade do Chute: ${ballSpeed.toFixed()}km/h`), null, welcomeColor, "bold", 0);
+		let frasegol = frasesgol[(Math.random() * frasesgol.length | 0)]
+		let fraseasis = frasesasis[(Math.random() * frasesasis.length | 0)]
+		
+		if (penultPlayerKick.name === undefined){
+			room.sendAnnouncement("[⚽👥] " + getTime(scores) + frasegol + lastPlayerKick.name + " | Velocidade do chute: " + ballSpeed.toPrecision(4).toString() + "km/h " + (team == Team.RED ? "🔴" : "🔵"),null,(team == Team.RED ? 0x922B16 : 0x2C6AC7),"bold", Notification.CHAT)
+			return
+		} else {
+			room.sendAnnouncement("[⚽👥] " + getTime(scores) + frasegol + lastPlayerKick.name + fraseasis + penultPlayerKick.name + " | Velocidade do chute: " + ballSpeed.toPrecision(4).toString() + "km/h " + (team == Team.RED ? "🔴" : "🔵"),null,(team == Team.RED ? 0x922B16 : 0x2C6AC7),"bold", Notification.CHAT); 
+		}
 
         setTimeout(() => {
             room.setPlayerAvatar(scorer.id, "⚽");
@@ -3473,9 +3504,11 @@ room.onTeamGoal = function (team) {
             }, 2500);
         }
     } else {
-        room.sendAnnouncement(``, null, welcomeColor, "bold", Notification.CHAT);
-        room.sendAnnouncement(centerText(`🤦‍♂️ É pro outro lado ${scorer.name}! Gol Contra! 🤦‍♂️`), null, welcomeColor, "bold", 0);
-        room.sendAnnouncement(centerText(`Velocidade do Chute: ${ballSpeed.toFixed()}km/h`), null, welcomeColor, "bold", 0);
+
+		let fraseautogol = frasesautogol[(Math.random() * frasesautogol.length) | 0]
+
+		room.sendAnnouncement("🤡 " + getTime(scores) + fraseautogol + lastPlayerKick.name + "! | Velocidade do chute: " + ballSpeed.toPrecision(4).toString() + "km/h " + (team == Team.RED ? "🔴" : "🔵"),null,(team == Team.RED ? 0x922B16 : 0x2C6AC7),"bold", Notification.CHAT);
+
         setTimeout(() => {
             room.setPlayerAvatar(scorer.id, "🤡");
             setTimeout(() => {
@@ -3537,7 +3570,9 @@ room.onTeamVictory = function () {
 	const mvp = calculateMVP();
     if (mvp) {
         room.sendAnnouncement(centerText(`[🏆] O MVP da partida foi: ${mvp.name} com ${mvp.points} pontos!`), null, welcomeColor, "bold", 0);
-    }
+    } else {
+		room.sendAnnouncement(centerText(`[🏟️] MVP da partida foi... A TORCIDA! 👏`), null, welcomeColor, "bold", 0)
+	}
 }
 
 room.onGameTick = function(){
@@ -3716,7 +3751,7 @@ function ColoredMessage(player, message){
 		let CustomEmoji = "⭐"
 		room.sendAnnouncement(`[${CustomEmoji}] ${player.name}: ${message}`, null, ChatColor, "normal")
 	} else if (team === 1) {
-		let ChatColor = 0xFF7438
+		let ChatColor = 0x922B16
 		let CustomEmoji = "🔴"
 		room.sendAnnouncement(`[${CustomEmoji}] ${player.name}: ${message}`, null, ChatColor, "normal")
 	} else if (team === 2){
@@ -3790,6 +3825,8 @@ function calculateMVP() {
     let mvp = null;
     for (let player of playerList) {
         if (!player.isInTheRoom) continue;
+		if (player.team === 0) continue
+		if (player.points === 0 && player.goals === 0 && player.assists === 0 && player.ownGoals === 0) continue
         if (!mvp || player.points > mvp.points || (player.points === mvp.points && player.assists > mvp.assists)) {
             mvp = player;
         }
