@@ -65,13 +65,13 @@ const Team = {
 const frasesgol = [
 	" QUE GOL É ESSE, SENHORAS E SENHORES! Você é uma lenda, ",
 	" GOOOOOOOOOOL! O MUNDO PRECISA DE MAIS COMO VOCÊ, ",
-	" Olha esse gol do(a) ",
+	" OLHA ESSE GOLAÇO DO(A) ",
 	" É GOOOOOL do(a) ",
 	" BELLIGOL BELLIGOL, É ELE! ",
 	" GOOOOOOOOOOL! APARECENDO QUANDO MAIS PRECISAMOS, GRAÇAS AO ",
 	" MINHA NOSSA SENHORA!!!! O IMPOSSÍVEL ACONTECEU MEU DEUS DO CÉU, É GOL DO(A) ",
 	" QUE GOLAÇO DO(A) ",
-	" Impresionante a finalização do(a) ",
+	" IMPRESSIONANTE A FINALIZAÇÃO DO(A) ",
 	" Desculpe o xingamento, MAS PUTA QUE PARIUUU, QUE GOL É ESSE, ",
 	" É CAIXA, É CAIXA, É CAIXA, É GOOOOOOOOOL DO(A) "
 ];
@@ -98,6 +98,14 @@ const frasescomeco = [
 	` [📢❗] APERTEM OS CINTOS PARA ESTA PARTIDA ENTRE "${nameHome}" E "${nameGuest}" !`,
 	` [👟💨⚽] ESTÁ DADO O PONTAPÉ INICIAL PARA O JOGO ENTRE "${nameHome}" 🆚 "${nameGuest}" !`,
 	` [📢❗] QUE O ESPETÁCULO COMEÇE AGORA! "${nameHome}" 🆚 "${nameGuest}" EM CAMPO!`
+]
+
+const frasesfim = [
+	` [🗣📢] AAAAAAAAAAAPITA O ÁRBITRO! FIM DE PAPO! `,
+	` [🏁] TEEEEEERMINA O JOGO! `,
+	` [💥] FIIIIIIM DE PAPO! `,
+	` [🔥] FINAL DE JOGO NA ARENA!} `,
+	` [🏁] E ACAAAAAAAAAABA O JOGO! `
 ]
 /* Lista de comandos */
 
@@ -3565,14 +3573,9 @@ room.onTeamVictory = function () {
 	Hposs = Hposs / (Hposs + Gposs);
 	Gposs = 1 - Hposs;
 
-	room.sendAnnouncement(centerText(`🏆 FIM DE PARTIDA 🏆`), null, welcomeColor, "bold", Notification.CHAT);
-	room.sendAnnouncement(centerText(`${emojiHome} ${nameHome} ${scores.red} - ${scores.blue} ${nameGuest} ${emojiGuest}`), null, welcomeColor, "bold", 0);
-	room.sendAnnouncement(centerText(`${emojiHome} ` + (Hposs * 100).toPrecision(2).toString() + `%` + `  Posse de bola  ` + (Gposs * 100).toPrecision(2).toString() + `% ${emojiGuest}`), null, welcomeColor, "bold", 0);
-
-	setTimeout(function () { 
-		lastPlayerKick = { id: 0, team: 0 };
-		penultPlayerKick = undefined;
-	}, 8000);
+	let frasefim = frasesfim[(Math.random() * frasesfim.length) | 0]
+	room.sendAnnouncement(centerText(frasefim + `${emojiHome} ${nameHome} ${scores.red} - ${scores.blue} ${nameGuest} ${emojiGuest}`), null, welcomeColor, "bold", 0);
+	room.sendAnnouncement(centerText(`${emojiHome} `  + (Hposs * 100).toPrecision(2).toString() + `%` + `  Posse de bola  ` + (Gposs * 100).toPrecision(2).toString() + `% ${emojiGuest}`), null, welcomeColor, "bold", 0)
 
 	const mvp = calculateMVP();
     if (mvp) {
@@ -3580,6 +3583,12 @@ room.onTeamVictory = function () {
     } else {
 		room.sendAnnouncement(centerText(`[🏟️] MVP da partida foi... A TORCIDA! 👏`), null, welcomeColor, "bold", 0)
 	}
+
+
+	setTimeout(function () { 
+		lastPlayerKick = { id: 0, team: 0 };
+		penultPlayerKick = undefined;
+	}, 8000);
 }
 
 room.onGameTick = function(){
