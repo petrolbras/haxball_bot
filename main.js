@@ -80,7 +80,7 @@ const frasesasis = [
 	" acompanhado do belíssimo passe de ",
 	" com o bolão na boca do gol de ",
 	" com a assistência fenomenal de ",
-	" e não podemos esquecer do passe magnífico de"
+	" e não podemos esquecer do passe magnífico de "
 ];
 const frasesautogol = [
 	" Fez igual o fuzaro contra o boca! Parabéns ",
@@ -90,6 +90,15 @@ const frasesautogol = [
 	" É GOOOOOOOOOL... contra do  ",
 	" Volta pro mar oferenda, "
 ];
+const frasescomeco = [
+	` [🚨] COOOOOOOOOOMEÇA O JOGO ENTRE "${nameHome}" 🆚 "${nameGuest}" !`,
+	` [🗣📢] AAAAAAAAAAAPITA O ÁRBITRO! PEGUEM SUAS PIPOCAS E DESFRUTEM DESSE JOGO ENTRE "${nameHome}" 🆚 "${nameGuest}" !`,
+	` [⚽💨] A BOLA ROLA, LEVE E SOLTA POR AQUI! "${nameHome}" 🆚 "${nameGuest}"`,
+	` [🚨] ESTÃO PRONTOS PARA ESSE JOGO ENTRE "${nameHome}" 🆚 "${nameGuest}" ? PORQUE JÁ COMEÇOU!`,
+	` [📢❗] APERTEM OS CINTOS PARA ESTA PARTIDA ENTRE "${nameHome}" E "${nameGuest}" !`,
+	` [👟💨⚽] ESTÁ DADO O PONTAPÉ INICIAL PARA O JOGO ENTRE "${nameHome}" 🆚 "${nameGuest}" !`,
+	` [📢❗] QUE O ESPETÁCULO COMEÇE AGORA! "${nameHome}" 🆚 "${nameGuest}" EM CAMPO!`
+]
 /* Lista de comandos */
 
 const commands = {
@@ -3389,7 +3398,8 @@ room.setTeamsLock(true);
 /* Funções Primárias */
 
 room.onGameStart = function () {
-	room.sendAnnouncement(centerText(`🥅🥅 PARTIDA INICIANDO 🥅🥅`), null, welcomeColor, "bold", Notification.CHAT);
+	let frasecomeco = frasescomeco[(Math.random() * frasescomeco.length | 0)]
+	room.sendAnnouncement(frasecomeco, null, welcomeColor, "bold", Notification.CHAT);
 
 	for (let player of playerList) {
         if(player.isInTheRoom) {
@@ -3420,9 +3430,9 @@ room.onGameStop = function(){
 }
 
 room.onPlayerJoin = function(player) {
-    room.sendAnnouncement((`──────────────────────────────────────────────────────────────`), player.id, welcomeColor, "bold", Notification.CHAT)
-    room.sendAnnouncement(centerText(`📢 Bem-vindo ${player.name}! digite "!ajuda" para a lista de comandos do server.`), player.id, welcomeColor, "bold", Notification.CHAT);
-    room.sendAnnouncement((`──────────────────────────────────────────────────────────────`), player.id, welcomeColor, "bold", Notification.CHAT)
+    room.sendAnnouncement((`╔════════════════════════════════════════════════════════════╗`), player.id, welcomeColor, "bold", Notification.CHAT)
+    room.sendAnnouncement(centerText(`📢 Bem-vindo ${player.name}! Digite "!ajuda" para a lista de comandos do server.`), player.id, welcomeColor, "bold", Notification.CHAT);
+    room.sendAnnouncement((`╚════════════════════════════════════════════════════════════╝`), player.id, welcomeColor, "bold", Notification.CHAT)
 	playerAuth[player.id] = player.auth
 	AddOrLoadPlayer(player);
 }
@@ -3459,7 +3469,6 @@ room.onPlayerBallKick = function (player) {
 
 room.onTeamGoal = function (team) {
     const scores = room.getScores();
-    const placar = centerText(`${emojiHome} ${nameHome} ${scores.red} - ${scores.blue} ${nameGuest} ${emojiGuest}`);
 	const scorer = lastPlayerKick
 	const assistant = (penultPlayerKick && penultPlayerKick.team === team && penultPlayerKick.id !== lastPlayerKick.id) ? penultPlayerKick : null;
 	const isOwnGoal = scorer.team !== team
@@ -3492,7 +3501,6 @@ room.onTeamGoal = function (team) {
         }, 2500);
 
         if (assistant) {
-            room.sendAnnouncement(centerText(`👟 Assistência: ${penultPlayerKick.name}👟`), null, welcomeColor, "bold", 0);
             setTimeout(() => {
                 room.setPlayerAvatar(penultPlayerKick.id, "👟");
                 setTimeout(() => {
@@ -3519,7 +3527,6 @@ room.onTeamGoal = function (team) {
             room.setPlayerAvatar(scorer.id, null);
         }, 2500);
     }
-	room.sendAnnouncement(placar, null, welcomeColor, "bold", Notification.CHAT);
 }
 
 room.onPlayerTeamChange = function (player) {
