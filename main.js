@@ -14,7 +14,7 @@ let playerAuth = [];
 let authWhiteList = [];
 const Role = { PLAYER: 0, ADMIN: 1};
 const Uniform = { CLUBLA: 0, CLUBEU: 1, CLUBCS: 2 };
-let adminPassword = "messi"
+let adminPassword = "7empest"
 let speedCoefficient = 100 / (5 * (0.99 ** 60 + 1));
 let point = [
     { "x": 0, "y": 0 },
@@ -91,13 +91,13 @@ const frasesautogol = [
 	" Volta pro mar oferenda, "
 ];
 const frasescomeco = [
-	` [🚨] COOOOOOOOOOMEÇA O JOGO ENTRE "${nameHome}" 🆚 "${nameGuest}" !`,
-	` [🗣📢] AAAAAAAAAAAPITA O ÁRBITRO! PEGUEM SUAS PIPOCAS E DESFRUTEM DESSE JOGO ENTRE "${nameHome}" 🆚 "${nameGuest}" !`,
-	` [⚽💨] A BOLA ROLA, LEVE E SOLTA POR AQUI! "${nameHome}" 🆚 "${nameGuest}"`,
-	` [🚨] ESTÃO PRONTOS PARA ESSE JOGO ENTRE "${nameHome}" 🆚 "${nameGuest}" ? PORQUE JÁ COMEÇOU!`,
-	` [📢❗] APERTEM OS CINTOS PARA ESTA PARTIDA ENTRE "${nameHome}" E "${nameGuest}" !`,
-	` [👟💨⚽] ESTÁ DADO O PONTAPÉ INICIAL PARA O JOGO ENTRE "${nameHome}" 🆚 "${nameGuest}" !`,
-	` [📢❗] QUE O ESPETÁCULO COMEÇE AGORA! "${nameHome}" 🆚 "${nameGuest}" EM CAMPO!`
+	` [🚨] COOOOOOOOOOMEÇA O JOGO ENTRE: `,
+	` [🗣📢] AAAAAAAAAAAPITA O ÁRBITRO! PEGUEM SUAS PIPOCAS E DESFRUTEM DESSE JOGO ENTRE: `,
+	` [⚽💨] A BOLA ROLA, LEVE E SOLTA POR AQUI! `,
+	` [🚨] ESTÃO PRONTOS PARA ESSE JOGO ENTRE? PORQUE COMEÇOU! `,
+	` [📢❗] APERTEM OS CINTOS PARA ESTA PARTIDA ENTRE: `,
+	` [👟💨⚽] ESTÁ DADO O PONTAPÉ INICIAL PARA O JOGO ENTRE: `,
+	` [📢❗] QUE O ESPETÁCULO COMEÇE AGORA! `
 ]
 
 const frasesfim = [
@@ -3406,8 +3406,9 @@ room.setTeamsLock(true);
 /* Funções Primárias */
 
 room.onGameStart = function () {
+	
 	let frasecomeco = frasescomeco[(Math.random() * frasescomeco.length | 0)]
-	room.sendAnnouncement(frasecomeco, null, welcomeColor, "bold", Notification.CHAT);
+	room.sendAnnouncement(frasecomeco + `"${nameHome}" VS "${nameGuest}"!`, null, welcomeColor, "bold", Notification.CHAT);
 
 	for (let player of playerList) {
         if(player.isInTheRoom) {
@@ -3478,7 +3479,7 @@ room.onPlayerBallKick = function (player) {
 room.onTeamGoal = function (team) {
     const scores = room.getScores();
 	const scorer = lastPlayerKick
-	const assistant = (penultPlayerKick && penultPlayerKick.team === team && penultPlayerKick.id !== lastPlayerKick.id) ? penultPlayerKick : null;
+	const assistant = (penultPlayerKick.team === team && penultPlayerKick.id !== lastPlayerKick.id) ? penultPlayerKick : null;
 	const isOwnGoal = scorer.team !== team
 
 	if (!scorer){
@@ -3491,11 +3492,11 @@ room.onTeamGoal = function (team) {
 		let frasegol = frasesgol[(Math.random() * frasesgol.length | 0)]
 		let fraseasis = frasesasis[(Math.random() * frasesasis.length | 0)]
 		
-		if (penultPlayerKick.name === undefined){
-			room.sendAnnouncement("[⚽👥] " + getTime(scores) + frasegol + lastPlayerKick.name + " | Velocidade do chute: " + ballSpeed.toPrecision(4).toString() + "km/h " + (team == Team.RED ? "🔴" : "🔵"),null,(team == Team.RED ? 0x922B16 : 0x2C6AC7),"bold", Notification.CHAT)
+		if (!assistant || assistant.name == null || assistant.team !== scorer.team){
+			room.sendAnnouncement("[⚽👥] " + getTime(scores) + frasegol + scorer.name + " | Velocidade do chute: " + ballSpeed.toPrecision(4).toString() + "km/h " + (team == Team.RED ? "🔴" : "🔵"),null,(team == Team.RED ? 0x922B16 : 0x2C6AC7),"bold", Notification.CHAT)
 			return
 		} else {
-			room.sendAnnouncement("[⚽👥] " + getTime(scores) + frasegol + lastPlayerKick.name + fraseasis + penultPlayerKick.name + " | Velocidade do chute: " + ballSpeed.toPrecision(4).toString() + "km/h " + (team == Team.RED ? "🔴" : "🔵"),null,(team == Team.RED ? 0x922B16 : 0x2C6AC7),"bold", Notification.CHAT); 
+			room.sendAnnouncement("[⚽👥] " + getTime(scores) + frasegol + scorer.name + fraseasis + assistant.name + " | Velocidade do chute: " + ballSpeed.toPrecision(4).toString() + "km/h " + (team == Team.RED ? "🔴" : "🔵"),null,(team == Team.RED ? 0x922B16 : 0x2C6AC7),"bold", Notification.CHAT); 
 		}
 
         setTimeout(() => {
@@ -3547,7 +3548,7 @@ room.onPlayerTeamChange = function (player) {
 			return
 		}
 
-        room.sendAnnouncement(`[⚠️] Você não pode colocar o bot para jogar!`, null , welcomeColor, "bold", Notification.CHAT);
+        room.sendAnnouncement(`[⚠️] Você não pode colocar o bot para jogar!`, player.id, welcomeColor, "bold", Notification.CHAT);
 
 		IgnorarTrocaBot = true
 		room.setPlayerTeam(player.id, 0);
