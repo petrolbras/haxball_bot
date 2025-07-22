@@ -36,6 +36,7 @@ let checkTimeVariable = false;
 let drawTimeLimit = 1
 let playerList = []
 let lastGoalTime = 0
+const avatarTimes = {}
 
 /* Cores */
 
@@ -104,7 +105,7 @@ const frasesfim = [
 	` [🗣📢] AAAAAAAAAAAPITA O ÁRBITRO! FIM DE PAPO! `,
 	` [🏁] TEEEEEERMINA O JOGO! `,
 	` [💥] FIIIIIIM DE PAPO! `,
-	` [🔥] FINAL DE JOGO NA ARENA!} `,
+	` [🔥] FINAL DE JOGO NA ARENA! `,
 	` [🏁] E ACAAAAAAAAAABA O JOGO! `
 ]
 /* Lista de comandos */
@@ -3492,50 +3493,23 @@ room.onTeamGoal = function (team) {
 		let frasegol = frasesgol[(Math.random() * frasesgol.length | 0)]
 		let fraseasis = frasesasis[(Math.random() * frasesasis.length | 0)]
 		
-		if (!assistant || assistant.name == null || assistant.team !== scorer.team){
+		if (!assistant || assistant.name == null || assistant.team !== scorer.team){	
 			room.sendAnnouncement("[⚽👥] " + getTime(scores) + frasegol + scorer.name + " | Velocidade do chute: " + ballSpeed.toPrecision(4).toString() + "km/h " + (team == Team.RED ? "🔴" : "🔵"),null,(team == Team.RED ? 0x922B16 : 0x2C6AC7),"bold", Notification.CHAT)
-			return
+			ChangePlayersAvatar(scorer.id, "⚽", 2500)
 		} else {
 			room.sendAnnouncement("[⚽👥] " + getTime(scores) + frasegol + scorer.name + fraseasis + assistant.name + " | Velocidade do chute: " + ballSpeed.toPrecision(4).toString() + "km/h " + (team == Team.RED ? "🔴" : "🔵"),null,(team == Team.RED ? 0x922B16 : 0x2C6AC7),"bold", Notification.CHAT); 
-		}
-
-        setTimeout(() => {
-            room.setPlayerAvatar(scorer.id, "⚽");
-            setTimeout(() => {
-                room.setPlayerAvatar(scorer.id, null);
-            }, 2500);
-        }, 1);
-        setTimeout(() => {
-            room.setPlayerAvatar(scorer.id, null);
-        }, 2500);
-
-        if (assistant) {
-            setTimeout(() => {
-                room.setPlayerAvatar(penultPlayerKick.id, "👟");
-                setTimeout(() => {
-                    room.setPlayerAvatar(penultPlayerKick.id, null);
-                }, 2500);
-            }, 1);
-            setTimeout(() => {
-                room.setPlayerAvatar(penultPlayerKick.id, null);
-            }, 2500);
+			ChangePlayersAvatar(scorer.id, "⚽", 2500)
+			ChangePlayersAvatar(assistant.id, "👟", 2500)
         }
-    } else {
 
+		
+    } else {
 		let fraseautogol = frasesautogol[(Math.random() * frasesautogol.length) | 0]
 
 		room.sendAnnouncement("🤡 " + getTime(scores) + fraseautogol + lastPlayerKick.name + "! | Velocidade do chute: " + ballSpeed.toPrecision(4).toString() + "km/h " + (team == Team.RED ? "🔴" : "🔵"),null,(team == Team.RED ? 0x922B16 : 0x2C6AC7),"bold", Notification.CHAT);
 
-        setTimeout(() => {
-            room.setPlayerAvatar(scorer.id, "🤡");
-            setTimeout(() => {
-                room.setPlayerAvatar(scorer.id, null);
-            }, 2500);
-        }, 1);
-        setTimeout(() => {
-            room.setPlayerAvatar(scorer.id, null);
-        }, 2500);
-    }
+        ChangePlayersAvatar(scorer.id, "🤡", 2500)
+	}
 }
 
 room.onPlayerTeamChange = function (player) {
@@ -3849,6 +3823,24 @@ function calculateMVP() {
         }
     }
     return mvp;
+}
+
+function ChangePlayersAvatar(playerId, emoji, duration) {
+	const player = room.getPlayer(playerId)
+	if (!player) {
+		return
+	}
+
+	room.setPlayerAvatar(playerId, emoji)
+
+	if (avatarTimes[playerId]) {
+		clearTimeout(avatarTimes[playerId])
+	}
+
+	avatarTimes[playerId] = setTimeout(() => {
+		room.setPlayerAvatar(playerId, null)
+		delete avatarTimes[playerId]
+	}, duration);
 }
 
 /* Funções dos comandos */
