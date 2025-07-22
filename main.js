@@ -3963,10 +3963,12 @@ function uniformCommand (player,message) {
             nameHome = uniforms[uniformName].name;
             acronymHome = uniformName;
             emojiHome = uniforms[uniformName].emoji;
+			isHomeReserve = false
         } else if (targetTeam == 2){
             nameGuest = uniforms[uniformName].name;
             acronymGuest = uniformName;
             emojiGuest = uniforms[uniformName].emoji;
+			isGuestReserve = false
         }
     }  
 
