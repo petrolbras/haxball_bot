@@ -12,6 +12,7 @@
 - Delay automático para correção de bugs do setCustomStadium.
 - Controle de fluxo e proteção contra comandos mal utilizados.
 - Sistema de MVP [🏆]
+- Sistema de emojis por gol/assistência/gols-contra
 
 <p align="center">
   <img src="assets/haxball-gradient-line.png" width="100%">
