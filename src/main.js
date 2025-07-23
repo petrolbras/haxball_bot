@@ -95,7 +95,7 @@ const frasescomeco = [
 	` [🚨] COOOOOOOOOOMEÇA O JOGO ENTRE: `,
 	` [🗣📢] AAAAAAAAAAAPITA O ÁRBITRO! PEGUEM SUAS PIPOCAS E DESFRUTEM DESSE JOGO ENTRE: `,
 	` [⚽💨] A BOLA ROLA, LEVE E SOLTA POR AQUI! `,
-	` [🚨] ESTÃO PRONTOS PARA ESSE JOGO ENTRE? PORQUE COMEÇOU! `,
+	` [🚨] ESTÃO PRONTOS PARA ESSE JOGO? PORQUE COMEÇOU! `,
 	` [📢❗] APERTEM OS CINTOS PARA ESTA PARTIDA ENTRE: `,
 	` [👟💨⚽] ESTÁ DADO O PONTAPÉ INICIAL PARA O JOGO ENTRE: `,
 	` [📢❗] QUE O ESPETÁCULO COMEÇE AGORA! `
@@ -3553,7 +3553,7 @@ room.onTeamVictory = function () {
 	room.sendAnnouncement(centerText(`${emojiHome} `  + (Hposs * 100).toPrecision(2).toString() + `%` + `  Posse de bola  ` + (Gposs * 100).toPrecision(2).toString() + `% ${emojiGuest}`), null, welcomeColor, "bold", 0)
 
 	const mvp = calculateMVP();
-    if (mvp) {
+    if (mvp && mvp.points > 0) {
         room.sendAnnouncement(centerText(`[🏆] O MVP da partida foi: ${mvp.name} com ${mvp.points} pontos!`), null, welcomeColor, "bold", 0);
     } else {
 		room.sendAnnouncement(centerText(`[🏟️] MVP da partida foi... A TORCIDA! 👏`), null, welcomeColor, "bold", 0)
