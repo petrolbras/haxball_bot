@@ -3408,8 +3408,12 @@ room.setTeamsLock(true);
 
 room.onGameStart = function () {
 	
+	// Frase de começo de jogo
+
 	let frasecomeco = frasescomeco[(Math.random() * frasescomeco.length | 0)]
 	room.sendAnnouncement(frasecomeco + `"${nameHome}" VS "${nameGuest}"!`, null, welcomeColor, "bold", Notification.CHAT);
+
+	// Reseta status
 
 	for (let player of playerList) {
         if(player.isInTheRoom) {
@@ -3419,11 +3423,16 @@ room.onGameStart = function () {
             player.points = 0;
         }
     }
+
     penultPlayerKick = undefined;
     lastPlayerKick = { id: 0, team: 0 };
 
+	// Posse de bola
+
 	Hposs = 0;
 	Gposs = 0;
+
+	// Variáveis
 
     isHomeReserve = false;
     isGuestReserve = false;
@@ -3432,23 +3441,37 @@ room.onGameStart = function () {
 	announcedOvertime = false;
 	announcedNormal = false;
 	checkTimeVariable = false;
-	console.log("Tempo limite da partida:", room.getScores()?.timeLimit);
 }
 
 room.onGameStop = function(){
+
+	// Mensagem em caso de empate total
+
 	room.sendAnnouncement(`[📢] EITA QUE PARTIDA FEIA DA MULESTA! EMPATE!`, null, welcomeColor, "bold", 0);
 	isGameRunning = false
 }
 
 room.onPlayerJoin = function(player) {
+
+	// Mensagem de boas-vindas
+
     room.sendAnnouncement((`╔════════════════════════════════════════════════════════════╗`), player.id, welcomeColor, "bold", Notification.CHAT)
     room.sendAnnouncement(centerText(`📢 Bem-vindo ${player.name}! Digite "!ajuda" para a lista de comandos do server.`), player.id, welcomeColor, "bold", Notification.CHAT);
     room.sendAnnouncement((`╚════════════════════════════════════════════════════════════╝`), player.id, welcomeColor, "bold", Notification.CHAT)
+
+	// Define playerAuth para comando de ADM
+
 	playerAuth[player.id] = player.auth
+
+	// Função de carregar/colocar jogador na lista de já jogados ou não
+
 	AddOrLoadPlayer(player);
 }
 
 room.onPlayerLeave = function(player){
+
+	// Mantém jogador no registro após sair da sala
+
 	if(playerList[player.id - 1]) {
         playerList[player.id - 1].isInTheRoom = false;
         localStorage.setItem(player.auth, JSON.stringify(playerList[player.id - 1]));
@@ -3456,22 +3479,29 @@ room.onPlayerLeave = function(player){
 }
 
 room.onPlayerChat = function(player, message) {
+
+	// Função para detectar comandos
+
     let msgArray = message.split(/ +/)
     if (msgArray[0][0] === '!'){
         let command = getCommand(msgArray[0].slice(1).toLowerCase())
-        console.log("Comando detectado:", command)
         if (command !== false) {
             commands[command].function(player, message)
             return false
         }
     }
 
-	ColoredMessage(player, message)
+	// Função para deixar mensagens coloridas
 
+	ColoredMessage(player, message)
+	
 	return false
 }
 
 room.onPlayerBallKick = function (player) {
+
+	// Atualiza as variáveis de último jogador e penúltimo que tocou na bola
+
 	if (!lastPlayerKick || player.id !== lastPlayerKick.id || player.team !== lastPlayerKick.team) {
 		penultPlayerKick = lastPlayerKick;
 		lastPlayerKick = player;
@@ -3487,6 +3517,8 @@ room.onTeamGoal = function (team) {
 	if (!scorer){
 		return
 	}
+
+	// Função para atualizar status de jogador
 
 	updatePlayerStatsOnGoal(scorer, assistant, isOwnGoal);
 
@@ -3530,6 +3562,8 @@ room.onPlayerTeamChange = function (player) {
 		return
     }
 
+	// Lógica do AFK
+
     if(afkPlayers.has(player.id)) {
 		teamChangeCooldown.add(player.id)
         room.setPlayerTeam(player.id, 0);
@@ -3546,6 +3580,8 @@ room.onPlayerTeamChange = function (player) {
 room.onTeamVictory = function () {
 	const scores = room.getScores();
 
+	// Lógica de média de posse de bola
+
 	Hposs = Hposs / (Hposs + Gposs);
 	Gposs = 1 - Hposs;
 
@@ -3560,6 +3596,7 @@ room.onTeamVictory = function () {
 		room.sendAnnouncement(`[🏟️] MVP da partida foi... A TORCIDA! 👏`, null, welcomeColor, "bold", 0)
 	}
 
+	// Recarrega as variáveis após o fim do jogo
 
 	setTimeout(function () { 
 		lastPlayerKick = { id: 0, team: 0 };
@@ -3615,6 +3652,9 @@ function getStats() {
 }
 
 function pointDistance(p1 , p2){
+
+	// Distância euclidiana da bola
+
     let d1 = p1.x - p2.x
     let d2 = p1.y - p2.y
     return Math.sqrt(d1*d1 + d2*d2)
