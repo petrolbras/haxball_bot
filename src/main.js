@@ -14,7 +14,7 @@ let playerAuth = [];
 let authWhiteList = [];
 const Role = { PLAYER: 0, ADMIN: 1};
 const Uniform = { CLUBLA: 0, CLUBEU: 1, CLUBCS: 2 };
-let adminPassword = "7empest"
+let adminPassword = "Maynard3131"
 let speedCoefficient = 100 / (5 * (0.99 ** 60 + 1));
 let point = [
     { "x": 0, "y": 0 },
@@ -3436,6 +3436,7 @@ room.onGameStart = function () {
 }
 
 room.onGameStop = function(){
+	room.sendAnnouncement(`[📢] EITA QUE PARTIDA FEIA DA MULESTA! EMPATE!`, null, welcomeColor, "bold", 0);
 	isGameRunning = false
 }
 
@@ -3549,14 +3550,14 @@ room.onTeamVictory = function () {
 	Gposs = 1 - Hposs;
 
 	let frasefim = frasesfim[(Math.random() * frasesfim.length) | 0]
-	room.sendAnnouncement(centerText(frasefim + `${emojiHome} ${nameHome} ${scores.red} - ${scores.blue} ${nameGuest} ${emojiGuest}`), null, welcomeColor, "bold", 0);
-	room.sendAnnouncement(centerText(`${emojiHome} `  + (Hposs * 100).toPrecision(2).toString() + `%` + `  Posse de bola  ` + (Gposs * 100).toPrecision(2).toString() + `% ${emojiGuest}`), null, welcomeColor, "bold", 0)
+	room.sendAnnouncement(frasefim + `${emojiHome} ${nameHome} ${scores.red} - ${scores.blue} ${nameGuest} ${emojiGuest}`, null, welcomeColor, "bold", 0);
+	room.sendAnnouncement(`[📊] ${emojiHome} `  + (Hposs * 100).toPrecision(2).toString() + `%` + `  Posse de bola  ` + (Gposs * 100).toPrecision(2).toString() + `% ${emojiGuest} [📊]`, null, welcomeColor, "bold", 0)
 
 	const mvp = calculateMVP();
     if (mvp && mvp.points > 0) {
-        room.sendAnnouncement(centerText(`[🏆] O MVP da partida foi: ${mvp.name} com ${mvp.points} pontos!`), null, welcomeColor, "bold", 0);
+        room.sendAnnouncement(`[🏆] O MVP da partida foi: ${mvp.name} com ${mvp.points} pontos!`, null, welcomeColor, "bold", 0);
     } else {
-		room.sendAnnouncement(centerText(`[🏟️] MVP da partida foi... A TORCIDA! 👏`), null, welcomeColor, "bold", 0)
+		room.sendAnnouncement(`[🏟️] MVP da partida foi... A TORCIDA! 👏`, null, welcomeColor, "bold", 0)
 	}
 
 
@@ -3710,13 +3711,17 @@ function Prorrogração(){
 			room.sendAnnouncement((`──────────────────────────────────────────────────────────────`), null, welcomeColor, "bold", Notification.CHAT)
 		}
 	}
+	if (scores.time > scores.timeLimit - 15 && !announcedNormal && !OnOvertime && scores.timeLimit > 0 && scores.red === scores.blue) {
+		announcedNormal = true
+		room.sendAnnouncement("[⌛] 15 segundos fim do tempo normal!", null, welcomeColor, "bold", Notification.CHAT);
+	}
 	if (scores.time > scores.timeLimit - 15 && !announcedNormal && !OnOvertime && scores.timeLimit > 0) {
 		announcedNormal = true
-		room.sendAnnouncement(centerText("[⌛] 15 segundos para o fim do tempo normal!"), null, welcomeColor, "bold", Notification.CHAT);
+		room.sendAnnouncement("[⌛] 15 segundos para o fim do jogo!", null, welcomeColor, "bold", Notification.CHAT);
 	}
 	if (scores.time > scores.timeLimit + drawTimeLimit * 60 - 15 && !announcedOvertime && OnOvertime) {
 			announcedOvertime = true
-            room.sendAnnouncement(centerText("[⌛] 15 segundos para o empate!"), null, welcomeColor, "bold", Notification.CHAT);
+            room.sendAnnouncement("[⌛] 15 segundos para o empate!", null, welcomeColor, "bold", Notification.CHAT);
     }
 	if (scores.time > (scores.timeLimit + drawTimeLimit * 60)) {
         if (checkTimeVariable === false) {
