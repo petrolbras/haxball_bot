@@ -36,6 +36,7 @@ let checkTimeVariable = false;
 let drawTimeLimit = 1
 let playerList = []
 let lastGoalTime = 0
+let StopGameHandler = false
 const avatarTimes = {}
 
 /* Cores */
@@ -3407,7 +3408,9 @@ room.setTeamsLock(true);
 /* Funções Primárias */
 
 room.onGameStart = function () {
-	
+
+	StopGameHandler = false
+
 	// Frase de começo de jogo
 
 	let frasecomeco = frasescomeco[(Math.random() * frasescomeco.length | 0)]
@@ -3444,10 +3447,6 @@ room.onGameStart = function () {
 }
 
 room.onGameStop = function(){
-
-	// Mensagem em caso de empate total
-
-	room.sendAnnouncement(`[📢] EITA QUE PARTIDA FEIA DA MULESTA! EMPATE!`, null, welcomeColor, "bold", 0);
 	isGameRunning = false
 }
 
@@ -3765,12 +3764,18 @@ function Prorrogração(){
     }
 	if (scores.time > (scores.timeLimit + drawTimeLimit * 60)) {
         if (checkTimeVariable === false) {
+
+			if (scores.red === scores.blue) {
+				room.sendAnnouncement(`[📢] EITA QUE PARTIDA FEIA DA MULESTA! EMPATE!`, null, welcomeColor, "bold", 0);
+			}	
+
+			room.stopGame();
+			OnOvertime = false
+
             checkTimeVariable = true;
             setTimeout(() => { 
 				checkTimeVariable = false; 
-			}, 10);
-            room.stopGame();
-			OnOvertime = false
+			}, 3000);
         }
     }
 }
