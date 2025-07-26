@@ -36,7 +36,6 @@ let checkTimeVariable = false;
 let drawTimeLimit = 1
 let playerList = []
 let lastGoalTime = 0
-let StopGameHandler = false
 const avatarTimes = {}
 
 /* Cores */
