@@ -51,7 +51,7 @@ let nameGuest = 'Visitante';
 let acronymGuest = 'Away';
 let emojiHome = '🏠';
 let emojiGuest = '✈️';
-let playersTeamHome;
+let playersTeamHome;	
 let playersTeamGuest;
 let playersTeamSpec;
 let goalsHome = [];
@@ -926,7 +926,6 @@ const mapas = {
 	"goals" : [
 		{ "p0" : [-374.25,-62.053454903872 ], "p1" : [-374.25,64.043361696331 ], "team" : "red" },
 		{ "p0" : [374.25,62 ], "p1" : [374.25,-62 ], "team" : "blue" }
-
 	],
 
 	"discs" : [
@@ -3295,7 +3294,6 @@ room.setTeamsLock(true);
 /* Funções Primárias */
 
 room.onGameStart = function () {
-
 	StopGameHandler = false
 
 	// Frase de começo de jogo
@@ -3366,9 +3364,10 @@ room.onPlayerLeave = function(player){
 
 room.onPlayerChat = function(player, message) {
 
+	let msgArray = message.split(/ +/)
+
 	// Função para detectar comandos
 
-    let msgArray = message.split(/ +/)
     if (msgArray[0][0] === '!'){
         let command = getCommand(msgArray[0].slice(1).toLowerCase())
         if (command !== false) {
@@ -3385,9 +3384,6 @@ room.onPlayerChat = function(player, message) {
 }
 
 room.onPlayerBallKick = function (player) {
-
-	// Atualiza as variáveis de último jogador e penúltimo que tocou na bola
-
 	if (!lastPlayerKick || player.id !== lastPlayerKick.id || player.team !== lastPlayerKick.team) {
 		penultPlayerKick = lastPlayerKick;
 		lastPlayerKick = player;
